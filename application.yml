@@ -1,0 +1,8 @@
+katharsis:
+  resourcePackage: io.katharsis.domain
+  domainName: http://localhost:9090/ipfms
+  pathPrefix: /api
+
+server:
+  context-path: /ipfms
+  port: 9090
