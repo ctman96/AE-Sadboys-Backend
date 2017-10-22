@@ -2,7 +2,6 @@ package com.ipfms.domain.model;
 
 import io.katharsis.resource.annotations.JsonApiId;
 import io.katharsis.resource.annotations.JsonApiResource;
-import java.util.Date;
 
 /**
  * Created by Cody on 2017-10-21.
