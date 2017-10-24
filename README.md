@@ -13,3 +13,4 @@ Ensure you have:
 Install dependencies: mvn clean install
 
 Run: mvn spring-boot:run
+http://localhost:9090/ipfms/resources-info to see all resource links
