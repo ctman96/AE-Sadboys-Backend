@@ -6,16 +6,16 @@ import io.katharsis.resource.annotations.JsonApiResource;
 
 
 @JsonApiResource(type = "userRoles")
-public class userRoles{
+public class UserRoles{
     @JsonApiId
     private long id;
     private long roleId;
 
-    public userRoles() {
+    public UserRoles() {
         super();
     }
 
-    public userRoles(long id, long roleId) {
+    public UserRoles(long id, long roleId) {
         this.id = id;
         this.roleId = roleId;
     }

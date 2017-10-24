@@ -10,10 +10,10 @@ import io.katharsis.resource.list.ResourceList;
 
 
 @Component
-public class userRoleRepositoryImpl extends ResourceRepositoryBase<userRoles, Long> {
+public class UserRolesRepositoryImpl extends ResourceRepositoryBase<UserRoles, Long> {
     private Map<Long, userRoles> userroles = new HashMap<>();
-    public RoleRepositoryImpl() {
-        super(userRoles.class);
+    public UserRolesRepositoryImpl() {
+        super(UserRoles.class);
     }
     @Override
     public synchronized ResourceList<userRoles> findAll(QuerySpec querySpec) {

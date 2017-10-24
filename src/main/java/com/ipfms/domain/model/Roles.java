@@ -5,7 +5,7 @@ import io.katharsis.resource.annotations.JsonApiResource;
 
 
 
-@JsonApiResource(type = "Roles")
+@JsonApiResource(type = "roles")
 public class Roles {
     @JsonApiId
     private long id;

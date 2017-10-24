@@ -6,16 +6,16 @@ import io.katharsis.resource.annotations.JsonApiResource;
 
 
 @JsonApiResource(type = "userLocations")
-public class userLocations {
+public class UserLocations {
     @JsonApiId
     private long id;
     private long locationId;
 
-    public userLocations() {
+    public UserLocations() {
         super();
     }
 
-    public userLocations(long id, long locationId) {
+    public UserLocations(long id, long locationId) {
         this.id = id;
         this.locationId = locationId;
     }
