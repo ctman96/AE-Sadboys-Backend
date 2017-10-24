@@ -11,11 +11,11 @@ public class Roles {
     private long id;
     private String name;
 
-    public roles() {
+    public Roles() {
         super();
     }
 
-    public roles(long id, String name) {
+    public Roles(long id, String name) {
         this.id = id;
         this.name = name;
     }

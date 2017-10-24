@@ -32,7 +32,7 @@ public class UserRoles{
         return roleId;
     }
 
-    public void setRoleId(String roleId) {
+    public void setRoleId(long roleId) {
         this.roleId = roleId;
     }
 

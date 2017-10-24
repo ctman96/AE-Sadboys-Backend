@@ -11,12 +11,12 @@ import io.katharsis.resource.list.ResourceList;
 
 @Component
 public class UserLocationRepositoryImpl extends ResourceRepositoryBase<UserLocations, Long> {
-    private Map<Long, userLocations> userLoc = new HashMap<>();
+    private Map<Long, UserLocations> userLoc = new HashMap<>();
     public UserLocationRepositoryImpl() {
         super(UserLocations.class);
     }
     @Override
-    public synchronized ResourceList<userLocations> findAll(QuerySpec querySpec) {
+    public synchronized ResourceList<UserLocations> findAll(QuerySpec querySpec) {
         return querySpec.apply(userLoc.values());
     }
 }
