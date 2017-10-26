@@ -2,11 +2,15 @@ package com.ipfms.domain.model;
 
 import io.katharsis.resource.annotations.JsonApiId;
 import io.katharsis.resource.annotations.JsonApiResource;
-
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 @JsonApiResource(type = "classifications")
 public class Classifications {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
     private int id;
     private String name;

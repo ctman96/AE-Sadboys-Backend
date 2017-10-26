@@ -2,13 +2,18 @@ package com.ipfms.domain.model;
 
 import io.katharsis.resource.annotations.JsonApiId;
 import io.katharsis.resource.annotations.JsonApiResource;
+import javax.persistence.*;
 
 /**
  * Created by Cody on 2017-10-21.
  */
 
+@Entity
 @JsonApiResource(type = "locations")
 public class Location {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
     private long id;
     private String name;

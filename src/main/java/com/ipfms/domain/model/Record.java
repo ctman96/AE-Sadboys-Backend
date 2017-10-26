@@ -2,14 +2,19 @@ package com.ipfms.domain.model;
 
 import io.katharsis.resource.annotations.JsonApiId;
 import io.katharsis.resource.annotations.JsonApiResource;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * Created by Cody on 2017-10-21.
  */
 
+@Entity
 @JsonApiResource(type = "records")
 public class Record {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
     private long id;
     private String number;

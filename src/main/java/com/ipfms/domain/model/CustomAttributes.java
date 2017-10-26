@@ -2,9 +2,14 @@ package com.ipfms.domain.model;
 
 import io.katharsis.resource.annotations.JsonApiId;
 import io.katharsis.resource.annotations.JsonApiResource;
+import javax.persistence.*;
 
+@Entity
 @JsonApiResource(type = "customAttributes")
 public class CustomAttributes {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
     private int id;
     private String name;
