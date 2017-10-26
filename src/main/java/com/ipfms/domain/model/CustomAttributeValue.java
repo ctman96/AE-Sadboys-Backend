@@ -6,48 +6,48 @@ import javax.persistence.*;
 
 @Entity
 @JsonApiResource(type = "customAttributeValues")
-public class CustomAttributeValues {
+public class CustomAttributeValue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private int id;
-    private int attrId;
-    private int recordId;
+    private long id;
+    private long attrId;
+    private long recordId;
     private String value;
 
-    public CustomAttributeValues() {
+    public CustomAttributeValue() {
         super();
     }
 
-    public CustomAttributeValues(int id, int attrId, int recordId, String value) {
+    public CustomAttributeValue(long id, long attrId, long recordId, String value) {
         this.id = id;
         this.attrId = attrId;
         this.recordId = recordId;
         this.value = value;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getAttrId() {
+    public long getAttrId() {
         return attrId;
     }
 
-    public void setAttrId(int attrId) {
+    public void setAttrId(long attrId) {
         this.attrId = attrId;
     }
 
-    public int getRecordId() {
+    public long getRecordId() {
         return recordId;
     }
 
-    public void setRecordId(int recordId) {
+    public void setRecordId(long recordId) {
         this.recordId = recordId;
     }
 

@@ -5,41 +5,41 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import javax.persistence.*;
 
 @Entity
-@JsonApiResource(type = "classificationHierarchy")
+@JsonApiResource(type = "classificationHierarchys")
 public class ClassHierarchy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private int id;
-    private int parentId;
+    private long id;
+    private long parentId;
     private int rel;
-    private int childId;
+    private long childId;
 
     public ClassHierarchy() {
         super();
     }
 
-    public ClassHierarchy(int id, int parentId, int rel, int childId) {
+    public ClassHierarchy(long id, long parentId, int rel, long childId) {
         this.id = id;
         this.parentId = parentId;
         this.rel = rel;
         this.childId = childId;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getParentId() {
+    public long getParentId() {
         return parentId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(long parentId) {
         this.parentId = parentId;
     }
 
@@ -51,11 +51,11 @@ public class ClassHierarchy {
         this.rel = rel;
     }
 
-    public int getChildId() {
+    public long getChildId() {
         return childId;
     }
 
-    public void setChildId(int childId) {
+    public void setChildId(long childId) {
         this.childId = childId;
     }
 }

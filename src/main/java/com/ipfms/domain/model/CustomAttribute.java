@@ -6,30 +6,30 @@ import javax.persistence.*;
 
 @Entity
 @JsonApiResource(type = "customAttributes")
-public class CustomAttributes {
+public class CustomAttribute {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private int id;
+    private long id;
     private String name;
-    private int lookupId;
+    private long lookupId;
 
-    public CustomAttributes() {
+    public CustomAttribute() {
         super();
     }
 
-    public CustomAttributes(int id, String name, int lookupId) {
+    public CustomAttribute(long id, String name, long lookupId) {
         this.id = id;
         this.name = name;
         this.lookupId = lookupId;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -41,11 +41,11 @@ public class CustomAttributes {
         this.name = name;
     }
 
-    public int getLookupId() {
+    public long getLookupId() {
         return lookupId;
     }
 
-    public void setLookupId(int lookupId) {
+    public void setLookupId(long lookupId) {
         this.lookupId = lookupId;
     }
 }

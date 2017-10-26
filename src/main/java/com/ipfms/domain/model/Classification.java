@@ -7,21 +7,21 @@ import java.util.Date;
 
 @Entity
 @JsonApiResource(type = "classifications")
-public class Classifications {
+public class Classification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private int id;
+    private long id;
     private String name;
     private String keyword;
     private Date updatedAt;
 
-    public Classifications() {
+    public Classification() {
         super();
     }
 
-    public Classifications(int id, String name, String keyword, Date updatedAt) {
+    public Classification(long id, String name, String keyword, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.keyword = keyword;
@@ -44,7 +44,7 @@ public class Classifications {
         return updatedAt;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

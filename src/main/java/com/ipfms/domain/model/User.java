@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @JsonApiResource(type = "users")
-public class Users {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,11 +16,11 @@ public class Users {
     private String firstName;
     private String lastName;
 
-    public Users() {
+    public User() {
         super();
     }
 
-    public Users(long id, String userid, String firstName, String lastName) {
+    public User(long id, String userid, String firstName, String lastName) {
         this.id = id;
         this.userid = userid;
         this.firstName = firstName;

@@ -5,22 +5,22 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import javax.persistence.*;
 
 @Entity
-@JsonApiResource(type = "roles")
-public class Roles {
+@JsonApiResource(type = "userLocations")
+public class UserLocation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
     private long id;
-    private String name;
+    private long locationId;
 
-    public Roles() {
+    public UserLocation() {
         super();
     }
 
-    public Roles(long id, String name) {
+    public UserLocation(long id, long locationId) {
         this.id = id;
-        this.name = name;
+        this.locationId = locationId;
     }
 
     public long getId() {
@@ -31,11 +31,11 @@ public class Roles {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public long getLocationId() {
+        return locationId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLocationId(long locationId) {
+        this.locationId = locationId;
     }
 }

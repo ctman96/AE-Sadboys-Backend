@@ -6,38 +6,38 @@ import javax.persistence.*;
 
 @Entity
 @JsonApiResource(type = "recordClassifications")
-public class RecordClassifications {
+public class RecordClassification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private int recordId;
-    private int classId;
+    private long recordId;
+    private long classId;
     private int ordinal;
 
-    public RecordClassifications() {
+    public RecordClassification() {
         super();
     }
 
-    public RecordClassifications(int recordId, int classId, int ordinal) {
+    public RecordClassification(long recordId, long classId, int ordinal) {
         this.recordId = recordId;
         this.classId = classId;
         this.ordinal = ordinal;
     }
 
-    public int getRecordId() {
+    public long getRecordId() {
         return recordId;
     }
 
-    public void setRecordId(int recordId) {
+    public void setRecordId(long recordId) {
         this.recordId = recordId;
     }
 
-    public int getClassId() {
+    public long getClassId() {
         return classId;
     }
 
-    public void setClassId(int classId) {
+    public void setClassId(long classId) {
         this.classId = classId;
     }
 
