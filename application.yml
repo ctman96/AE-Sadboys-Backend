@@ -9,8 +9,8 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://sql3.freemysqlhosting.net
-    name: sql3201579
-    username: sql3201579
-    password: 9Ez82627Ve
+    url: jdbc:mysql://localhost
+    name:
+    username: sadboys
+    password: sadboys
     driver-class-name: com.mysql.jdbc.Driver
