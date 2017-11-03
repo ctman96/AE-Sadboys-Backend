@@ -23,7 +23,7 @@ import io.katharsis.spring.boot.v3.KatharsisConfigV3;
 @Configuration
 @RestController
 @SpringBootApplication
-@Import({ KatharsisConfigV3.class, JpaConfig.class, ModuleConfig.class })
+@Import({ KatharsisConfigV3.class})
 public class App {
 
     @Autowired

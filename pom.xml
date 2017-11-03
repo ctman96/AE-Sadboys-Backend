@@ -46,11 +46,11 @@
       <artifactId>katharsis-spring</artifactId>
       <version>${katharsis.version}</version>
     </dependency>
-    <!--dependency>
+    <dependency>
       <groupId>io.katharsis</groupId>
       <artifactId>katharsis-jpa</artifactId>
       <version>${katharsis.version}</version>
-    </dependency-->
+    </dependency>
 
     <dependency>
       <groupId>org.hibernate</groupId>
