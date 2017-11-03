@@ -11,11 +11,11 @@ import java.util.Date;
 
 
 @Component
-public class ClassificationRepositoryImpl extends ResourceRepositoryBase<Classification, Long> {
-    private Map<Long, Classification> classifications = new HashMap<>();
+public class ClassificationRepositoryImpl extends ResourceRepositoryBase<Classification, Integer> {
+    private Map<Integer, Classification> classifications = new HashMap<>();
     public ClassificationRepositoryImpl() {
         super(Classification.class);
-        classifications.put(1L, new Classification(1L, "test", "F", new Date())); //Test
+        classifications.put(1, new Classification(1, "test", "F", new Date())); //Test
     }
 
     @Override

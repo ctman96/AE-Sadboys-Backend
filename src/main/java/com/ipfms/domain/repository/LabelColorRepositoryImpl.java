@@ -13,7 +13,7 @@ import io.katharsis.resource.list.ResourceList;
  */
 
 @Component
-public class LabelColorRepositoryImpl extends ResourceRepositoryBase<LabelColor, Long> {
+public class LabelColorRepositoryImpl extends ResourceRepositoryBase<LabelColor, String> {
     private Map<String, LabelColor> labelColors = new HashMap<>();
     public LabelColorRepositoryImpl() {
         super(LabelColor.class);

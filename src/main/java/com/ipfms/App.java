@@ -22,7 +22,6 @@ import io.katharsis.spring.boot.v3.KatharsisConfigV3;
 @Import({ KatharsisConfigV3.class, JpaConfig.class, ModuleConfig.class })
 public class App {
 
-
     @Autowired
     private ResourceRegistry resourceRegistry;
 

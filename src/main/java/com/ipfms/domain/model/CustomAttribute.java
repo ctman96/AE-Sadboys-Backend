@@ -11,25 +11,25 @@ public class CustomAttribute {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long id;
+    private Integer id;
     private String name;
-    private long lookupId;
+    private Integer lookupId;
 
     public CustomAttribute() {
         super();
     }
 
-    public CustomAttribute(long id, String name, long lookupId) {
+    public CustomAttribute(Integer id, String name, Integer lookupId) {
         this.id = id;
         this.name = name;
         this.lookupId = lookupId;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -41,11 +41,11 @@ public class CustomAttribute {
         this.name = name;
     }
 
-    public long getLookupId() {
+    public Integer getLookupId() {
         return lookupId;
     }
 
-    public void setLookupId(long lookupId) {
+    public void setLookupId(Integer lookupId) {
         this.lookupId = lookupId;
     }
 }

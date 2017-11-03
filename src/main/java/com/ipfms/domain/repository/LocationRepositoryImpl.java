@@ -13,8 +13,8 @@ import io.katharsis.resource.list.ResourceList;
  */
 
 @Component
-public class LocationRepositoryImpl extends ResourceRepositoryBase<Location, Long> {
-    private Map<Long, Location> locations = new HashMap<>();
+public class LocationRepositoryImpl extends ResourceRepositoryBase<Location, Integer> {
+    private Map<Integer, Location> locations = new HashMap<>();
     public LocationRepositoryImpl() {
         super(Location.class);
     }

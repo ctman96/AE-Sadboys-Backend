@@ -12,7 +12,7 @@ public class Classification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long id;
+    private Integer id;
     private String name;
     private String keyword;
     private Date updatedAt;
@@ -21,14 +21,14 @@ public class Classification {
         super();
     }
 
-    public Classification(long id, String name, String keyword, Date updatedAt) {
+    public Classification(Integer id, String name, String keyword, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.keyword = keyword;
         this.updatedAt = updatedAt;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -44,7 +44,7 @@ public class Classification {
         return updatedAt;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

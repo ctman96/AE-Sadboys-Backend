@@ -15,7 +15,7 @@ public class RecordType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long id;
+    private Integer id;
     private String name;
     private String numberPattern;
     private int defaultScheduled;
@@ -24,18 +24,18 @@ public class RecordType {
         super();
     }
 
-    public RecordType(long id, String name, String numberPattern, int defaultScheduled) {
+    public RecordType(Integer id, String name, String numberPattern, int defaultScheduled) {
         this.id = id;
         this.name = name;
         this.numberPattern = numberPattern;
         this.defaultScheduled = defaultScheduled;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

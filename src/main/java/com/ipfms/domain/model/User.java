@@ -11,7 +11,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long id;
+    private Integer id;
     private String userid;
     private String firstName;
     private String lastName;
@@ -20,18 +20,18 @@ public class User {
         super();
     }
 
-    public User(long id, String userid, String firstName, String lastName) {
+    public User(Integer id, String userid, String firstName, String lastName) {
         this.id = id;
         this.userid = userid;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

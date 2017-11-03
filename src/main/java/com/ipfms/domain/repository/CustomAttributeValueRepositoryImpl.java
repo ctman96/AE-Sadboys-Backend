@@ -9,8 +9,8 @@ import io.katharsis.repository.ResourceRepositoryBase;
 import io.katharsis.resource.list.ResourceList;
 
 @Component
-public class CustomAttributeValueRepositoryImpl extends ResourceRepositoryBase<CustomAttributeValue, Long> {
-    private Map<Long, CustomAttributeValue> customAttributeValues = new HashMap<>();
+public class CustomAttributeValueRepositoryImpl extends ResourceRepositoryBase<CustomAttributeValue, Integer> {
+    private Map<Integer, CustomAttributeValue> customAttributeValues = new HashMap<>();
     public CustomAttributeValueRepositoryImpl() {
         super(CustomAttributeValue.class);
     }

@@ -15,7 +15,7 @@ public class Container {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long id;
+    private Integer id;
     private String number;
     private String title;
     private String consignmentCode;
@@ -26,7 +26,7 @@ public class Container {
         super();
     }
 
-    public Container(long id, String number, String title, String consignmentCode, Date createdAt, Date updatedAt) {
+    public Container(Integer id, String number, String title, String consignmentCode, Date createdAt, Date updatedAt) {
         this.id = id;
         this.number = number;
         this.title = title;
@@ -35,11 +35,11 @@ public class Container {
         this.updatedAt = updatedAt;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -11,31 +11,31 @@ public class UserLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long id;
-    private long locationId;
+    private Integer id;
+    private Integer locationId;
 
     public UserLocation() {
         super();
     }
 
-    public UserLocation(long id, long locationId) {
+    public UserLocation(Integer id, Integer locationId) {
         this.id = id;
         this.locationId = locationId;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public long getLocationId() {
+    public Integer getLocationId() {
         return locationId;
     }
 
-    public void setLocationId(long locationId) {
+    public void setLocationId(Integer locationId) {
         this.locationId = locationId;
     }
 }

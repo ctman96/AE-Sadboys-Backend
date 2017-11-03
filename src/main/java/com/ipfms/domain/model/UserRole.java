@@ -11,31 +11,31 @@ public class UserRole{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long id;
-    private long roleId;
+    private Integer id;
+    private Integer roleId;
 
     public UserRole() {
         super();
     }
 
-    public UserRole(long id, long roleId) {
+    public UserRole(Integer id, Integer roleId) {
         this.id = id;
         this.roleId = roleId;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public long getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(long roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 

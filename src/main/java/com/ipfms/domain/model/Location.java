@@ -15,7 +15,7 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long id;
+    private Integer id;
     private String name;
     private String code;
     private boolean locked;
@@ -24,18 +24,18 @@ public class Location {
         super();
     }
 
-    public Location(long id, String name, String code, boolean locked) {
+    public Location(Integer id, String name, String code, boolean locked) {
         this.id = id;
         this.name = name;
         this.code = code;
         this.locked = locked;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

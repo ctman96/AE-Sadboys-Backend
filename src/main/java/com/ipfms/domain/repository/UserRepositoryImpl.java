@@ -10,8 +10,8 @@ import io.katharsis.resource.list.ResourceList;
 
 
 @Component
-public class UserRepositoryImpl extends ResourceRepositoryBase<User, Long> {
-    private Map<Long, User> users = new HashMap<>();
+public class UserRepositoryImpl extends ResourceRepositoryBase<User, Integer> {
+    private Map<Integer, User> users = new HashMap<>();
     public UserRepositoryImpl() {
         super(User.class);
     }

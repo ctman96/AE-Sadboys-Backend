@@ -11,35 +11,35 @@ public class ClassHierarchy {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long id;
-    private long parentId;
+    private Integer id;
+    private Integer parentId;
     private int rel;
-    private long childId;
+    private Integer childId;
 
     public ClassHierarchy() {
         super();
     }
 
-    public ClassHierarchy(long id, long parentId, int rel, long childId) {
+    public ClassHierarchy(Integer id, Integer parentId, int rel, Integer childId) {
         this.id = id;
         this.parentId = parentId;
         this.rel = rel;
         this.childId = childId;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public long getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(long parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 
@@ -51,11 +51,11 @@ public class ClassHierarchy {
         this.rel = rel;
     }
 
-    public long getChildId() {
+    public Integer getChildId() {
         return childId;
     }
 
-    public void setChildId(long childId) {
+    public void setChildId(Integer childId) {
         this.childId = childId;
     }
 }

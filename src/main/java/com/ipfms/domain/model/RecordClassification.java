@@ -11,33 +11,33 @@ public class RecordClassification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long recordId;
-    private long classId;
+    private Integer recordId;
+    private Integer classId;
     private int ordinal;
 
     public RecordClassification() {
         super();
     }
 
-    public RecordClassification(long recordId, long classId, int ordinal) {
+    public RecordClassification(Integer recordId, Integer classId, int ordinal) {
         this.recordId = recordId;
         this.classId = classId;
         this.ordinal = ordinal;
     }
 
-    public long getRecordId() {
+    public Integer getRecordId() {
         return recordId;
     }
 
-    public void setRecordId(long recordId) {
+    public void setRecordId(Integer recordId) {
         this.recordId = recordId;
     }
 
-    public long getClassId() {
+    public Integer getClassId() {
         return classId;
     }
 
-    public void setClassId(long classId) {
+    public void setClassId(Integer classId) {
         this.classId = classId;
     }
 

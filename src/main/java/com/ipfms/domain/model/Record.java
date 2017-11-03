@@ -16,7 +16,7 @@ public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
-    private long id;
+    private Integer id;
     private String number;
     private String title;
     private int scheduled;
@@ -33,7 +33,7 @@ public class Record {
         super();
     }
 
-    public Record(long id, String number, String title, int scheduled, int typeId, String consignmentCode, int stateId, int containerId, int locationId, Date createdAt, Date updatedAt, Date closedAt) {
+    public Record(Integer id, String number, String title, int scheduled, int typeId, String consignmentCode, int stateId, int containerId, int locationId, Date createdAt, Date updatedAt, Date closedAt) {
         this.id = id;
         this.number = number;
         this.title = title;
@@ -48,7 +48,7 @@ public class Record {
         this.closedAt = closedAt;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -8,8 +8,8 @@ import io.katharsis.queryspec.QuerySpec;
 import io.katharsis.repository.ResourceRepositoryBase;
 import io.katharsis.resource.list.ResourceList;
 
-public class ClassHierarchyRepositoryImpl extends ResourceRepositoryBase<ClassHierarchy, Long>{
-    private Map<Long, ClassHierarchy> classHierarchy = new HashMap<>();
+public class ClassHierarchyRepositoryImpl extends ResourceRepositoryBase<ClassHierarchy, Integer>{
+    private Map<Integer, ClassHierarchy> classHierarchy = new HashMap<>();
     public ClassHierarchyRepositoryImpl() {
         super(ClassHierarchy.class);
     }

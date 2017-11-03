@@ -9,8 +9,8 @@ import io.katharsis.repository.ResourceRepositoryBase;
 import io.katharsis.resource.list.ResourceList;
 
 @Component
-public class RecordClassificationRepositoryImpl extends ResourceRepositoryBase<RecordClassification, Long> {
-    private Map<Long, RecordClassification> recordClassifications = new HashMap<>();
+public class RecordClassificationRepositoryImpl extends ResourceRepositoryBase<RecordClassification, Integer> {
+    private Map<Integer, RecordClassification> recordClassifications = new HashMap<>();
     public RecordClassificationRepositoryImpl() {
         super(RecordClassification.class);
     }
