@@ -60,6 +60,21 @@
       <artifactId>katharsis-client</artifactId>
       <version>3.0.0</version>
     </dependency>
+    <dependency>
+      <groupId>io.katharsis</groupId>
+      <artifactId>katharsis-validation</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.katharsis</groupId>
+      <artifactId>katharsis-brave</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.katharsis</groupId>
+      <artifactId>katharsis-jpa</artifactId>
+      <version>3.0.0</version>
+    </dependency>
   </dependencies>
   
   
