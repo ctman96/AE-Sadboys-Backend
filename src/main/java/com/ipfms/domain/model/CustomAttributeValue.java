@@ -5,6 +5,7 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "customattributevalues")
 @JsonApiResource(type = "customAttributeValues")
 public class CustomAttributeValue {
 

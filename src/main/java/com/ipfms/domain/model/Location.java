@@ -9,6 +9,7 @@ import javax.persistence.*;
  */
 
 @Entity
+@Table(name = "locations")
 @JsonApiResource(type = "locations")
 public class Location {
 

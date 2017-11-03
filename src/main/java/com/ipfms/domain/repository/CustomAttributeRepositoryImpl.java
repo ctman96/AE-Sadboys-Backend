@@ -8,6 +8,7 @@ import io.katharsis.queryspec.QuerySpec;
 import io.katharsis.repository.ResourceRepositoryBase;
 import io.katharsis.resource.list.ResourceList;
 
+@Component
 public class CustomAttributeRepositoryImpl extends ResourceRepositoryBase<CustomAttribute, Integer>{
     private Map<Integer, CustomAttribute> customAttributes = new HashMap<>();
     public CustomAttributeRepositoryImpl() {

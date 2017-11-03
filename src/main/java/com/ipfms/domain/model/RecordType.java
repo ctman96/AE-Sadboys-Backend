@@ -9,6 +9,7 @@ import javax.persistence.*;
  */
 
 @Entity
+@Table(name = "recordtypes")
 @JsonApiResource(type = "recordTypes")
 public class RecordType {
 
@@ -18,17 +19,17 @@ public class RecordType {
     private Integer id;
     private String name;
     private String numberPattern;
-    private int defaultScheduled;
+    private Integer defaultScheduleId;
 
     public RecordType() {
         super();
     }
 
-    public RecordType(Integer id, String name, String numberPattern, int defaultScheduled) {
+    public RecordType(Integer id, String name, String numberPattern, Integer defaultScheduleId) {
         this.id = id;
         this.name = name;
         this.numberPattern = numberPattern;
-        this.defaultScheduled = defaultScheduled;
+        this.defaultScheduleId = defaultScheduleId;
     }
 
     public Integer getId() {
@@ -55,11 +56,11 @@ public class RecordType {
         this.numberPattern = numberPattern;
     }
 
-    public int getDefaultScheduled() {
-        return defaultScheduled;
+    public Integer getDefaultScheduleId() {
+        return defaultScheduleId;
     }
 
-    public void setDefaultScheduled(int defaultScheduled) {
-        this.defaultScheduled = defaultScheduled;
+    public void setDefaultScheduleId(Integer defaultScheduleId) {
+        this.defaultScheduleId = defaultScheduleId;
     }
 }

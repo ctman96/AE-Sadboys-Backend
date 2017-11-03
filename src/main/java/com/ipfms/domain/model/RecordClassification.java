@@ -5,6 +5,7 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "recordclassifications")
 @JsonApiResource(type = "recordClassifications")
 public class RecordClassification {
 

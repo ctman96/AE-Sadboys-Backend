@@ -9,22 +9,23 @@ import javax.persistence.*;
  */
 
 @Entity
-@JsonApiResource(type = "labelColors")
-public class LabelColor {
+@Table(name = "labelcolours")
+@JsonApiResource(type = "labelColours")
+public class LabelColour {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
     private String key;
-    private String color;
+    private String colour;
 
-    public LabelColor() {
+    public LabelColour() {
         super();
     }
 
-    public LabelColor(String key, String color) {
+    public LabelColour(String key, String colour) {
         this.key = key;
-        this.color = color;
+        this.colour = colour;
     }
 
     public String getKey() {
@@ -35,11 +36,11 @@ public class LabelColor {
         this.key = key;
     }
 
-    public String getColor() {
-        return color;
+    public String getColour() {
+        return colour;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setColour(String colour) {
+        this.colour = colour;
     }
 }

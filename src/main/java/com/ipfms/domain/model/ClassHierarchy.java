@@ -5,10 +5,12 @@ import io.katharsis.resource.annotations.JsonApiResource;
 import javax.persistence.*;
 
 @Entity
-@JsonApiResource(type = "classificationHierarchys")
+@Table(name = "classhierarchy")
+@JsonApiResource(type = "classificationHierarchies")
 public class ClassHierarchy {
 
     @Id
+    @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonApiId
     private Integer id;

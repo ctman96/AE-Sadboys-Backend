@@ -169,7 +169,7 @@ CREATE TABLE `locations` (
   `Id` int(11) NOT NULL,
   `Name` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `Code` char(10) CHARACTER SET utf8mb4 NOT NULL,
-  `Locked?` CHAR(1) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'F',
+  `Locked` CHAR(1) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'F',
   PRIMARY KEY (`Id`),
   UNIQUE KEY `AK_Locations_Name` (`Name`),
   KEY `IX_Locations_Name` (`Name`)

@@ -9,6 +9,7 @@ import java.util.Date;
  * Created by Cody on 2017-10-21.
  */
 @Entity
+@Table(name = "containers")
 @JsonApiResource(type = "containers")
 public class Container {
 

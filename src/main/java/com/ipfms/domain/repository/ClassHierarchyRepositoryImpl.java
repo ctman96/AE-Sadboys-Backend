@@ -7,8 +7,11 @@ import com.ipfms.domain.model.ClassHierarchy;
 import io.katharsis.queryspec.QuerySpec;
 import io.katharsis.repository.ResourceRepositoryBase;
 import io.katharsis.resource.list.ResourceList;
+import org.springframework.stereotype.Repository;
 
-public class ClassHierarchyRepositoryImpl extends ResourceRepositoryBase<ClassHierarchy, Integer>{
+@Component
+@Repository
+public class ClassHierarchyRepositoryImpl extends ResourceRepositoryBase<ClassHierarchy, Integer> {
     private Map<Integer, ClassHierarchy> classHierarchy = new HashMap<>();
     public ClassHierarchyRepositoryImpl() {
         super(ClassHierarchy.class);
