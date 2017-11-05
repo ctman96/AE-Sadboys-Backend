@@ -29,7 +29,7 @@ public class UserController{
         this.userResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(produces = APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<Resources<User>> showClassHierarchies() {
         List<User> c = (ArrayList<User>) userRepository.findAll();
         if (c == null) {
@@ -49,7 +49,7 @@ public class UserController{
         Resource<User> resource = userResourceAssembler.toResource(c);
         return ResponseEntity.ok(resource);
     }
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="", params = "userId", method = RequestMethod.GET)
     ResponseEntity<Resource<User>> getUser(@RequestParam("userId") String userId){
         User c = userRepository.findByUserId(userId);
         if (c == null) {

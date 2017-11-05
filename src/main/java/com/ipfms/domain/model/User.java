@@ -1,6 +1,9 @@
 package com.ipfms.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -12,6 +15,10 @@ public class User {
     private String userId;
     private String firstName;
     private String lastName;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="userroles", joinColumns = @JoinColumn(name="UserId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name="RoleId", referencedColumnName = "Id"))
+    private Set<Role> roles;
 
     public User() {
         super();
@@ -54,5 +61,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @JsonIgnoreProperties("users")
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

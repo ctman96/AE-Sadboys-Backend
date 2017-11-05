@@ -1,6 +1,9 @@
 package com.ipfms.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "customattributes")
@@ -10,16 +13,22 @@ public class CustomAttribute {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    private Integer lookupId;
+
+    @ManyToOne()
+    @JoinColumn(name="LookupId")
+    private CustomAttributeLookup lookup;
+
+    @OneToMany(targetEntity=CustomAttributeValue.class, mappedBy="attribute", cascade=CascadeType.ALL)
+    private Set<CustomAttributeValue> attributeValues;
 
     public CustomAttribute() {
         super();
     }
 
-    public CustomAttribute(Integer id, String name, Integer lookupId) {
+    public CustomAttribute(Integer id, String name, CustomAttributeLookup lookup) {
         this.id = id;
         this.name = name;
-        this.lookupId = lookupId;
+        this.lookup = lookup;
     }
 
     public Integer getId() {
@@ -38,11 +47,21 @@ public class CustomAttribute {
         this.name = name;
     }
 
-    public Integer getLookupId() {
-        return lookupId;
+    public CustomAttributeLookup getLookupId() {
+        return lookup;
     }
 
-    public void setLookupId(Integer lookupId) {
-        this.lookupId = lookupId;
+    public void setLookupId(CustomAttributeLookup lookup) {
+        this.lookup = lookup;
+    }
+
+    @JsonIgnore
+    public Set<CustomAttributeValue> getAttributeValues() {
+        return attributeValues;
+    }
+
+    @JsonIgnore
+    public void setAttributeValues(Set<CustomAttributeValue> attributeValues) {
+        this.attributeValues = attributeValues;
     }
 }

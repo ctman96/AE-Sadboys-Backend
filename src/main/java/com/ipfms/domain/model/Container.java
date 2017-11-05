@@ -1,7 +1,10 @@
 package com.ipfms.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by Cody on 2017-10-21.
@@ -18,6 +21,10 @@ public class Container {
     private String consignmentCode;
     private Date createdAt;
     private Date updatedAt;
+
+    @JsonIgnore
+    @OneToMany(targetEntity=Record.class, mappedBy="container", cascade=CascadeType.ALL)
+    private Set<Record> records;
 
     public Container() {
         super();

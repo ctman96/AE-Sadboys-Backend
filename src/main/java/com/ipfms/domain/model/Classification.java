@@ -1,7 +1,10 @@
 package com.ipfms.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "classifications")
@@ -13,6 +16,18 @@ public class Classification {
     private String name;
     private String keyword;
     private Date updatedAt;
+
+    @JsonIgnore
+    @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="parent", cascade=CascadeType.ALL)
+    private Set<ClassHierarchy> parentHierarchies;
+
+    @JsonIgnore
+    @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="child", cascade=CascadeType.ALL)
+    private Set<ClassHierarchy> childHierarchies;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "classifications")
+    private Set<Record> records;
 
     public Classification() {
         super();
@@ -55,5 +70,29 @@ public class Classification {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Set<ClassHierarchy> getParentHierarchies() {
+        return parentHierarchies;
+    }
+
+    public void setParentHierarchies(Set<ClassHierarchy> parentHierarchies) {
+        this.parentHierarchies = parentHierarchies;
+    }
+
+    public Set<ClassHierarchy> getChildHierarchies() {
+        return childHierarchies;
+    }
+
+    public void setChildHierarchies(Set<ClassHierarchy> childHierarchies) {
+        this.childHierarchies = childHierarchies;
+    }
+
+    public Set<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(Set<Record> records) {
+        this.records = records;
     }
 }

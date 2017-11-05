@@ -10,19 +10,24 @@ public class ClassHierarchy {
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private Integer parentId;
+
+    @ManyToOne
+    @JoinColumn(name="ParentId", insertable = false, updatable = false)
+    private Classification parent;
     private int rel;
-    private Integer childId;
+
+    @ManyToOne
+    @JoinColumn(name="ChildId", insertable = false, updatable = false)
+    private Classification child;
 
     public ClassHierarchy() {
         super();
     }
 
-    public ClassHierarchy(Integer id, Integer parentId, int rel, Integer childId) {
-        this.id = id;
-        this.parentId = parentId;
+    public ClassHierarchy(Classification parent, int rel, Classification child) {
+        this.parent = parent;
         this.rel = rel;
-        this.childId = childId;
+        this.child = child;
     }
 
     public Integer getId() {
@@ -33,12 +38,12 @@ public class ClassHierarchy {
         this.id = id;
     }
 
-    public Integer getParentId() {
-        return parentId;
+    public Classification getParent() {
+        return parent;
     }
 
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
+    public void setParent(Classification parent) {
+        this.parent = parent;
     }
 
     public int getRel() {
@@ -49,11 +54,11 @@ public class ClassHierarchy {
         this.rel = rel;
     }
 
-    public Integer getChildId() {
-        return childId;
+    public Classification getChild() {
+        return child;
     }
 
-    public void setChildId(Integer childId) {
-        this.childId = childId;
+    public void setChild(Classification child) {
+        this.child = child;
     }
 }

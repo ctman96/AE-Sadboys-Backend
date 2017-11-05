@@ -15,17 +15,19 @@ public class RecordType {
     private Integer id;
     private String name;
     private String numberPattern;
-    private Integer defaultScheduleId;
+
+    @ManyToOne()
+    @JoinColumn(name="DefaultScheduleId")
+    private RetentionSchedule defaultSchedule;
 
     public RecordType() {
         super();
     }
 
-    public RecordType(Integer id, String name, String numberPattern, Integer defaultScheduleId) {
-        this.id = id;
+    public RecordType(String name, String numberPattern, RetentionSchedule defaultSchedule) {
         this.name = name;
         this.numberPattern = numberPattern;
-        this.defaultScheduleId = defaultScheduleId;
+        this.defaultSchedule = defaultSchedule;
     }
 
     public Integer getId() {
@@ -52,11 +54,11 @@ public class RecordType {
         this.numberPattern = numberPattern;
     }
 
-    public Integer getDefaultScheduleId() {
-        return defaultScheduleId;
+    public RetentionSchedule getDefaultSchedule() {
+        return defaultSchedule;
     }
 
-    public void setDefaultScheduleId(Integer defaultScheduleId) {
-        this.defaultScheduleId = defaultScheduleId;
+    public void setDefaultSchedule(RetentionSchedule defaultSchedule) {
+        this.defaultSchedule = defaultSchedule;
     }
 }

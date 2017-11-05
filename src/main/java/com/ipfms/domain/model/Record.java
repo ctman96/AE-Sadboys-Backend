@@ -1,7 +1,10 @@
 package com.ipfms.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by Cody on 2017-10-21.
@@ -14,32 +17,57 @@ public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
     private String number;
     private String title;
-    private Integer scheduleId;
-    private Integer typeId;
+
+    @ManyToOne()
+    @JoinColumn(name="ScheduleId")
+    private RetentionSchedule schedule;
+
+    @ManyToOne()
+    @JoinColumn(name="TypeId")
+    private RecordType type;
+
     private String consignmentCode;
-    private Integer stateId;
-    private Integer containerId;
-    private Integer locationId;
+
+    @ManyToOne()
+    @JoinColumn(name="StateId")
+    private RecordState state;
+
+    @ManyToOne()
+    @JoinColumn(name="ContainerId")
+    private Container container;
+
+    @ManyToOne()
+    @JoinColumn(name="LocationId")
+    private Location location;
+
     private Date createdAt;
     private Date updatedAt;
     private Date closedAt;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="recordclassifications", joinColumns = @JoinColumn(name="RecordId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name="ClassId", referencedColumnName = "Id"))
+    private Set<Classification> classifications;
+
+    @JsonIgnore
+    @OneToMany(targetEntity=CustomAttributeValue.class, mappedBy="record", cascade=CascadeType.ALL)
+    private Set<CustomAttributeValue> customAttributeValues;
 
     public Record() {
         super();
     }
 
-    public Record(Integer id, String number, String title, Integer scheduleId, Integer typeId, String consignmentCode, Integer stateId, Integer containerId, Integer locationId, Date createdAt, Date updatedAt, Date closedAt) {
-        this.id = id;
+    public Record(String number, String title, RetentionSchedule schedule, RecordType type, String consignmentCode, RecordState state, Container container, Location location, Date createdAt, Date updatedAt, Date closedAt) {
         this.number = number;
         this.title = title;
-        this.scheduleId = scheduleId;
-        this.typeId = typeId;
+        this.schedule = schedule;
+        this.type = type;
         this.consignmentCode = consignmentCode;
-        this.stateId = stateId;
-        this.containerId = containerId;
-        this.locationId = locationId;
+        this.state = state;
+        this.container = container;
+        this.location = location;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.closedAt = closedAt;
@@ -51,14 +79,6 @@ public class Record {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getScheduleId() {
-        return scheduleId;
-    }
-
-    public void setScheduleId(Integer scheduleId) {
-        this.scheduleId = scheduleId;
     }
 
     public String getNumber() {
@@ -77,20 +97,20 @@ public class Record {
         this.title = title;
     }
 
-    public Integer getScheduled() {
-        return scheduleId;
+    public RetentionSchedule getSchedule() {
+        return schedule;
     }
 
-    public void setScheduled(Integer scheduleId) {
-        this.scheduleId = scheduleId;
+    public void setSchedule(RetentionSchedule schedule) {
+        this.schedule = schedule;
     }
 
-    public Integer getTypeId() {
-        return typeId;
+    public RecordType getType() {
+        return type;
     }
 
-    public void setTypeId(Integer typeId) {
-        this.typeId = typeId;
+    public void setType(RecordType type) {
+        this.type = type;
     }
 
     public String getConsignmentCode() {
@@ -101,28 +121,28 @@ public class Record {
         this.consignmentCode = consignmentCode;
     }
 
-    public Integer getStateId() {
-        return stateId;
+    public RecordState getState() {
+        return state;
     }
 
-    public void setStateId(Integer stateId) {
-        this.stateId = stateId;
+    public void setState(RecordState state) {
+        this.state = state;
     }
 
-    public Integer getContainerId() {
-        return containerId;
+    public Container getContainer() {
+        return container;
     }
 
-    public void setContainerId(Integer containerId) {
-        this.containerId = containerId;
+    public void setContainer(Container container) {
+        this.container = container;
     }
 
-    public Integer getLocationId() {
-        return locationId;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setLocationId(Integer locationId) {
-        this.locationId = locationId;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public Date getCreatedAt() {
@@ -147,5 +167,21 @@ public class Record {
 
     public void setClosedAt(Date closedAt) {
         this.closedAt = closedAt;
+    }
+
+    public Set<Classification> getClassifications() {
+        return classifications;
+    }
+
+    public void setClassifications(Set<Classification> classifications) {
+        this.classifications = classifications;
+    }
+
+    public Set<CustomAttributeValue> getCustomAttributeValues() {
+        return customAttributeValues;
+    }
+
+    public void setCustomAttributeValues(Set<CustomAttributeValue> customAttributeValues) {
+        this.customAttributeValues = customAttributeValues;
     }
 }

@@ -1,6 +1,9 @@
 package com.ipfms.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by Cody on 2017-10-21.
@@ -16,6 +19,10 @@ public class Location {
     private String name;
     private String code;
     private boolean locked;
+
+    @JsonIgnore
+    @OneToMany(targetEntity=Record.class, mappedBy="location", cascade=CascadeType.ALL)
+    private Set<Record> records;
 
     public Location() {
         super();
@@ -58,5 +65,13 @@ public class Location {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public Set<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(Set<Record> records) {
+        this.records = records;
     }
 }

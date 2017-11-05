@@ -9,18 +9,25 @@ public class CustomAttributeValue {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private Integer attrId;
-    private Integer recordId;
+
+    @ManyToOne()
+    @JoinColumn(name="AttrId")
+    private CustomAttribute attribute;
+
+    @ManyToOne()
+    @JoinColumn(name="RecordId")
+    private Record record;
+
     private String value;
 
     public CustomAttributeValue() {
         super();
     }
 
-    public CustomAttributeValue(Integer id, Integer attrId, Integer recordId, String value) {
+    public CustomAttributeValue(Integer id, CustomAttribute attribute, Record record, String value) {
         this.id = id;
-        this.attrId = attrId;
-        this.recordId = recordId;
+        this.attribute = attribute;
+        this.record = record;
         this.value = value;
     }
 
@@ -32,20 +39,20 @@ public class CustomAttributeValue {
         this.id = id;
     }
 
-    public Integer getAttrId() {
-        return attrId;
+    public CustomAttribute getAttribute() {
+        return attribute;
     }
 
-    public void setAttrId(Integer attrId) {
-        this.attrId = attrId;
+    public void setAttribute(CustomAttribute attribute) {
+        this.attribute = attribute;
     }
 
-    public Integer getRecordId() {
-        return recordId;
+    public Record getRecord() {
+        return record;
     }
 
-    public void setRecordId(Integer recordId) {
-        this.recordId = recordId;
+    public void setRecord(Record record) {
+        this.record = record;
     }
 
     public String getValue() {
