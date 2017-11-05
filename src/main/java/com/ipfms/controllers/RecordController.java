@@ -3,13 +3,13 @@ package com.ipfms.controllers;
 import com.ipfms.assembler.RecordResourceAssembler;
 import com.ipfms.domain.model.Record;
 import com.ipfms.domain.repository.RecordRepository;
+import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +29,36 @@ public class RecordController{
         this.recordResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping
-    public List<Record> showRecords() {
-        return (ArrayList<Record>)recordRepository.findAll();
+    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Resources<Record>> showClassHierarchies() {
+        List<Record> c = (ArrayList<Record>) recordRepository.findAll();
+        if (c == null) {
+            throw new EntityNotFoundException("No Records found");
+        }
+        Resources<Record> resources = recordResourceAssembler.toResources(c);
+        return ResponseEntity.ok(resources);
     }
 
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<Record>> getRecord(@PathVariable("id") Integer id){
         Record c = recordRepository.findById(id);
+        if (c == null) {
+            throw new EntityNotFoundException("Record not found - id: " + id);
+        }
         Resource<Record> resource = recordResourceAssembler.toResource(c);
         return ResponseEntity.ok(resource);
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    ResponseEntity<Void> createRecord(@RequestBody Record record) {
+        recordRepository.save(record);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    ResponseEntity<Void> deleteRecord(@PathVariable("id") Integer id){
+        recordRepository.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

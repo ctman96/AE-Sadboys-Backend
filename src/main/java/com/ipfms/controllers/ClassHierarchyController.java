@@ -49,4 +49,16 @@ public class ClassHierarchyController{
         Resource<ClassHierarchy> resource = classHierarchyResourceAssembler.toResource(c);
         return ResponseEntity.ok(resource);
     }
+
+    @RequestMapping(method = RequestMethod.POST)
+    ResponseEntity<Void> createClassHierarchy(@RequestBody ClassHierarchy classHierarchy) {
+        classHierarchyRepository.save(classHierarchy);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    ResponseEntity<Void> deleteClassHierarchy(@PathVariable("id") Integer id){
+        classHierarchyRepository.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -3,13 +3,13 @@ package com.ipfms.controllers;
 import com.ipfms.assembler.CustomAttributeValueResourceAssembler;
 import com.ipfms.domain.model.CustomAttributeValue;
 import com.ipfms.domain.repository.CustomAttributeValueRepository;
+import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +29,36 @@ public class CustomAttributeValueController{
         this.customAttributeValueResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping
-    public List<CustomAttributeValue> showCustomAttributeValues() {
-        return (ArrayList<CustomAttributeValue>)customAttributeValueRepository.findAll();
+    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Resources<CustomAttributeValue>> showClassHierarchies() {
+        List<CustomAttributeValue> c = (ArrayList<CustomAttributeValue>) customAttributeValueRepository.findAll();
+        if (c == null) {
+            throw new EntityNotFoundException("No CustomAttributeValues found");
+        }
+        Resources<CustomAttributeValue> resources = customAttributeValueResourceAssembler.toResources(c);
+        return ResponseEntity.ok(resources);
     }
 
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<CustomAttributeValue>> getCustomAttributeValue(@PathVariable("id") Integer id){
         CustomAttributeValue c = customAttributeValueRepository.findById(id);
+        if (c == null) {
+            throw new EntityNotFoundException("CustomAttributeValue not found - id: " + id);
+        }
         Resource<CustomAttributeValue> resource = customAttributeValueResourceAssembler.toResource(c);
         return ResponseEntity.ok(resource);
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    ResponseEntity<Void> createCustomAttributeValue(@RequestBody CustomAttributeValue customAttributeValue) {
+        customAttributeValueRepository.save(customAttributeValue);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    ResponseEntity<Void> deleteCustomAttributeValue(@PathVariable("id") Integer id){
+        customAttributeValueRepository.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
