@@ -1,18 +1,14 @@
 package com.ipfms.domain.model;
 
-import io.katharsis.resource.annotations.JsonApiId;
-import io.katharsis.resource.annotations.JsonApiResource;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "classhierarchy")
-@JsonApiResource(type = "classificationHierarchies")
 public class ClassHierarchy {
 
     @Id
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonApiId
     private Integer id;
     private Integer parentId;
     private int rel;

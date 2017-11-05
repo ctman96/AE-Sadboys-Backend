@@ -1,7 +1,5 @@
 package com.ipfms.domain.model;
 
-import io.katharsis.resource.annotations.JsonApiId;
-import io.katharsis.resource.annotations.JsonApiResource;
 import javax.persistence.*;
 import java.util.Date;
 
@@ -11,12 +9,10 @@ import java.util.Date;
 
 @Entity
 @Table(name = "records")
-@JsonApiResource(type = "records")
 public class Record {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonApiId
     private Integer id;
     private String number;
     private String title;
@@ -49,8 +45,20 @@ public class Record {
         this.closedAt = closedAt;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(Integer scheduleId) {
+        this.scheduleId = scheduleId;
     }
 
     public String getNumber() {
