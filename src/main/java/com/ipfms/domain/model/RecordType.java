@@ -1,7 +1,5 @@
 package com.ipfms.domain.model;
 
-import io.katharsis.resource.annotations.JsonApiId;
-import io.katharsis.resource.annotations.JsonApiResource;
 import javax.persistence.*;
 
 /**
@@ -10,12 +8,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "recordtypes")
-@JsonApiResource(type = "recordTypes")
 public class RecordType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonApiId
     private Integer id;
     private String name;
     private String numberPattern;

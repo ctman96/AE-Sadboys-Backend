@@ -1,17 +1,13 @@
 package com.ipfms.domain.model;
 
-import io.katharsis.resource.annotations.JsonApiId;
-import io.katharsis.resource.annotations.JsonApiResource;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "recordclassifications")
-@JsonApiResource(type = "recordClassifications")
 public class RecordClassification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonApiId
     private Integer recordId;
     private Integer classId;
     private int ordinal;
