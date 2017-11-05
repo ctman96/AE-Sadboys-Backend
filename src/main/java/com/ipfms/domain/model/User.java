@@ -9,7 +9,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private String userid;
+    private String userId;
     private String firstName;
     private String lastName;
 
@@ -17,9 +17,9 @@ public class User {
         super();
     }
 
-    public User(Integer id, String userid, String firstName, String lastName) {
+    public User(Integer id, String userId, String firstName, String lastName) {
         this.id = id;
-        this.userid = userid;
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -32,12 +32,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getFirstName() {

@@ -49,16 +49,20 @@ public class UserController{
         Resource<User> resource = userResourceAssembler.toResource(c);
         return ResponseEntity.ok(resource);
     }
-
-    @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Void> createUser(@RequestBody User user) {
-        userRepository.save(user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @RequestMapping(produces = APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    ResponseEntity<Resource<User>> getUser(@RequestParam("userId") String userId){
+        User c = userRepository.findByUserId(userId);
+        if (c == null) {
+            throw new EntityNotFoundException("User not found - userId: " + userId);
+        }
+        Resource<User> resource = userResourceAssembler.toResource(c);
+        return ResponseEntity.ok(resource);
     }
 
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteUser(@PathVariable("id") Integer id){
-        userRepository.delete(id);
+    @RequestMapping(method = RequestMethod.POST)
+    ResponseEntity<Void> updateUser(@RequestBody User user) {
+        User c = userRepository.findByUserId(user.getUserId());
+        userRepository.save(user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
