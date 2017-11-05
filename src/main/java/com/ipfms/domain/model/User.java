@@ -20,6 +20,10 @@ public class User {
     @JoinTable(name="userroles", joinColumns = @JoinColumn(name="UserId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name="RoleId", referencedColumnName = "Id"))
     private Set<Role> roles;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="userlocations", joinColumns = @JoinColumn(name="UserId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name="LocationId", referencedColumnName = "Id"))
+    private Set<Role> locations;
+
     public User() {
         super();
     }
@@ -70,5 +74,14 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @JsonIgnoreProperties("users")
+    public Set<Role> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(Set<Role> locations) {
+        this.locations = locations;
     }
 }

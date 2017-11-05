@@ -1,6 +1,7 @@
 package com.ipfms.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -19,6 +20,9 @@ public class Location {
     private String name;
     private String code;
     private boolean locked;
+
+    @ManyToMany(mappedBy = "locations")
+    private Set<User> users;
 
     @JsonIgnore
     @OneToMany(targetEntity=Record.class, mappedBy="location", cascade=CascadeType.ALL)
@@ -65,6 +69,15 @@ public class Location {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    @JsonIgnoreProperties("locations")
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public Set<Record> getRecords() {
