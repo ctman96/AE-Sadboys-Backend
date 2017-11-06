@@ -24,8 +24,7 @@ public class CustomAttributeValue {
         super();
     }
 
-    public CustomAttributeValue(Integer id, CustomAttribute attribute, Record record, String value) {
-        this.id = id;
+    public CustomAttributeValue(CustomAttribute attribute, Record record, String value) {
         this.attribute = attribute;
         this.record = record;
         this.value = value;

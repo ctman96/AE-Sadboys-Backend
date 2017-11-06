@@ -30,8 +30,7 @@ public class Container {
         super();
     }
 
-    public Container(Integer id, String number, String title, String consignmentCode, Date createdAt, Date updatedAt) {
-        this.id = id;
+    public Container(String number, String title, String consignmentCode, Date createdAt, Date updatedAt) {
         this.number = number;
         this.title = title;
         this.consignmentCode = consignmentCode;

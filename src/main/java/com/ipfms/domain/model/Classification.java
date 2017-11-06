@@ -33,8 +33,7 @@ public class Classification {
         super();
     }
 
-    public Classification(Integer id, String name, String keyword, Date updatedAt) {
-        this.id = id;
+    public Classification(String name, String keyword, Date updatedAt) {
         this.name = name;
         this.keyword = keyword;
         this.updatedAt = updatedAt;

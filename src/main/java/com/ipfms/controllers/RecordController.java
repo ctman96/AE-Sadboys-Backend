@@ -30,12 +30,12 @@ public class RecordController{
     }
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resources<Record>> showClassHierarchies() {
+    public ResponseEntity<List<Resource<Record>>> showRecords() {
         List<Record> c = (ArrayList<Record>) recordRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No Records found");
         }
-        Resources<Record> resources = recordResourceAssembler.toResources(c);
+        List<Resource<Record>> resources = recordResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
 

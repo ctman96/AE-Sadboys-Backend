@@ -22,14 +22,13 @@ public class User {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="userlocations", joinColumns = @JoinColumn(name="UserId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name="LocationId", referencedColumnName = "Id"))
-    private Set<Role> locations;
+    private Set<Location> locations;
 
     public User() {
         super();
     }
 
-    public User(Integer id, String userId, String firstName, String lastName) {
-        this.id = id;
+    public User(String userId, String firstName, String lastName) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -77,11 +76,11 @@ public class User {
     }
 
     @JsonIgnoreProperties("users")
-    public Set<Role> getLocations() {
+    public Set<Location> getLocations() {
         return locations;
     }
 
-    public void setLocations(Set<Role> locations) {
+    public void setLocations(Set<Location> locations) {
         this.locations = locations;
     }
 }

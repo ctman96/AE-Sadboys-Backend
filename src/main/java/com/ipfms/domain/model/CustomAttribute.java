@@ -25,8 +25,7 @@ public class CustomAttribute {
         super();
     }
 
-    public CustomAttribute(Integer id, String name, CustomAttributeLookup lookup) {
-        this.id = id;
+    public CustomAttribute(String name, CustomAttributeLookup lookup) {
         this.name = name;
         this.lookup = lookup;
     }
@@ -47,11 +46,11 @@ public class CustomAttribute {
         this.name = name;
     }
 
-    public CustomAttributeLookup getLookupId() {
+    public CustomAttributeLookup getLookup() {
         return lookup;
     }
 
-    public void setLookupId(CustomAttributeLookup lookup) {
+    public void setLookup(CustomAttributeLookup lookup) {
         this.lookup = lookup;
     }
 

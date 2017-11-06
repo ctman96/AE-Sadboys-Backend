@@ -30,12 +30,12 @@ public class LabelColourController{
     }
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resources<LabelColour>> showClassHierarchies() {
+    public ResponseEntity<List<Resource<LabelColour>>> showLabelColours() {
         List<LabelColour> c = (ArrayList<LabelColour>) labelColourRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No LabelColours found");
         }
-        Resources<LabelColour> resources = labelColourResourceAssembler.toResources(c);
+        List<Resource<LabelColour>> resources = labelColourResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
 

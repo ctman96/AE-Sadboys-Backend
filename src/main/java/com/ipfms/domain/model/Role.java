@@ -21,8 +21,7 @@ public class Role {
         super();
     }
 
-    public Role(Integer id, String name) {
-        this.id = id;
+    public Role(String name) {
         this.name = name;
     }
 

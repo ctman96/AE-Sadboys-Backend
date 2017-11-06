@@ -33,12 +33,12 @@ public class TODOController{
     }
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resources<TODO>> showClassHierarchies() {
+    public ResponseEntity<List<Resource<TODO>>> showTODOs() {
         List<TODO> c = (ArrayList<TODO>) toDoRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No TODOs found");
         }
-        Resources<TODO> resources = toDoResourceAssembler.toResources(c);
+        List<Resource<TODO>> resources = toDoResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
 

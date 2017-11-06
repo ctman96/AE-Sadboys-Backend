@@ -30,12 +30,12 @@ public class LocationController{
     }
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resources<Location>> showClassHierarchies() {
+    public ResponseEntity<List<Resource<Location>>> showLocations() {
         List<Location> c = (ArrayList<Location>) locationRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No Locations found");
         }
-        Resources<Location> resources = locationResourceAssembler.toResources(c);
+        List<Resource<Location>> resources = locationResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
 

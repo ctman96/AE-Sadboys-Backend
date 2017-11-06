@@ -7,6 +7,7 @@ import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -15,11 +16,16 @@ public class CustomAttributeResourceAssembler implements ResourceAssembler<Custo
     public Resource<CustomAttribute> toResource(CustomAttribute customAttribute) {
         Resource<CustomAttribute> resource = new Resource<>(customAttribute);
         resource.add(new Link("http://customattributes/" + customAttribute.getId()).withSelfRel());
+        if (!(customAttribute.getLookup() == null)){
+            resource.add(new Link ("http://customattributelookups/"+customAttribute.getLookup().getId(), "lookup"));
+        }
         return resource;
     }
-    public Resources<CustomAttribute> toResources(List<CustomAttribute> customAttributes){
-        Resources<CustomAttribute> resources = new Resources<>(customAttributes);
-        resources.add(new Link("http://customattributes/"));
+    public List<Resource<CustomAttribute>> toResources(List<CustomAttribute> customAttributes){
+        List<Resource<CustomAttribute>> resources = new ArrayList<>();
+        for(CustomAttribute c : customAttributes){
+            resources.add(toResource(c));
+        }
         return resources;
     }
 

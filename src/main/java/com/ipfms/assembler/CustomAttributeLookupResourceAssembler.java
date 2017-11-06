@@ -7,6 +7,7 @@ import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -17,9 +18,11 @@ public class CustomAttributeLookupResourceAssembler implements ResourceAssembler
         resource.add(new Link("http://customattributelookups/" + customAttributeLookup.getId()).withSelfRel());
         return resource;
     }
-    public Resources<CustomAttributeLookup> toResources(List<CustomAttributeLookup> customAttributeLookups){
-        Resources<CustomAttributeLookup> resources = new Resources<>(customAttributeLookups);
-        resources.add(new Link("http://customattributelookups/"));
+    public List<Resource<CustomAttributeLookup>> toResources(List<CustomAttributeLookup> customAttributeLookups){
+        List<Resource<CustomAttributeLookup>> resources = new ArrayList<>();
+        for(CustomAttributeLookup c : customAttributeLookups){
+            resources.add(toResource(c));
+        }
         return resources;
     }
 

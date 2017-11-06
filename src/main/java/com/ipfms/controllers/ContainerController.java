@@ -30,12 +30,12 @@ public class ContainerController{
     }
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resources<Container>> showClassHierarchies() {
+    public ResponseEntity<List<Resource<Container>>> showContainers() {
         List<Container> c = (ArrayList<Container>) containerRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No Containers found");
         }
-        Resources<Container> resources = containerResourceAssembler.toResources(c);
+        List<Resource<Container>> resources = containerResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
 

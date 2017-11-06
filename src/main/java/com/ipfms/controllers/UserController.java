@@ -29,16 +29,15 @@ public class UserController{
         this.userResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<Resources<User>> showClassHierarchies() {
+    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Resource<User>>> showUsers() {
         List<User> c = (ArrayList<User>) userRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No Users found");
         }
-        Resources<User> resources = userResourceAssembler.toResources(c);
+        List<Resource<User>> resources = userResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
-
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<User>> getUser(@PathVariable("id") Integer id){

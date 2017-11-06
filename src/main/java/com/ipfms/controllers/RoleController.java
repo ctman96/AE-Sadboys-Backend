@@ -30,12 +30,12 @@ public class RoleController{
     }
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resources<Role>> showClassHierarchies() {
+    public ResponseEntity<List<Resource<Role>>> showRoles() {
         List<Role> c = (ArrayList<Role>) roleRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No Roles found");
         }
-        Resources<Role> resources = roleResourceAssembler.toResources(c);
+        List<Resource<Role>> resources = roleResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
 

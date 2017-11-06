@@ -30,12 +30,12 @@ public class CustomAttributeLookupController{
     }
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resources<CustomAttributeLookup>> showClassHierarchies() {
+    public ResponseEntity<List<Resource<CustomAttributeLookup>>> showCustomAttributeLookups() {
         List<CustomAttributeLookup> c = (ArrayList<CustomAttributeLookup>) customAttributeLookupRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No CustomAttributeLookups found");
         }
-        Resources<CustomAttributeLookup> resources = customAttributeLookupResourceAssembler.toResources(c);
+        List<Resource<CustomAttributeLookup>> resources = customAttributeLookupResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
 

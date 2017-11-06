@@ -30,12 +30,12 @@ public class ClassHierarchyController{
     }
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resources<ClassHierarchy>> showClassHierarchies() {
+    public ResponseEntity<List<Resource<ClassHierarchy>>> showClassHierarchies() {
         List<ClassHierarchy> c = (ArrayList<ClassHierarchy>) classHierarchyRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No ClassHierarchies found");
         }
-        Resources<ClassHierarchy> resources = classHierarchyResourceAssembler.toResources(c);
+        List<Resource<ClassHierarchy>> resources = classHierarchyResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
 

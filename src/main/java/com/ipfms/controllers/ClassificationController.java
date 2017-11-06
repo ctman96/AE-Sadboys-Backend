@@ -30,12 +30,12 @@ public class ClassificationController{
     }
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resources<Classification>> showClassHierarchies() {
+    public ResponseEntity<List<Resource<Classification>>> showClassHierarchies() {
         List<Classification> c = (ArrayList<Classification>) classificationRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No Classifications found");
         }
-        Resources<Classification> resources = classificationResourceAssembler.toResources(c);
+        List<Resource<Classification>> resources = classificationResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
 

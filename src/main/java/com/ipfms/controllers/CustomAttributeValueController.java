@@ -30,12 +30,12 @@ public class CustomAttributeValueController{
     }
 
     @RequestMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resources<CustomAttributeValue>> showClassHierarchies() {
+    public ResponseEntity<List<Resource<CustomAttributeValue>>> showCustomAttributeValues() {
         List<CustomAttributeValue> c = (ArrayList<CustomAttributeValue>) customAttributeValueRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No CustomAttributeValues found");
         }
-        Resources<CustomAttributeValue> resources = customAttributeValueResourceAssembler.toResources(c);
+        List<Resource<CustomAttributeValue>> resources = customAttributeValueResourceAssembler.toResources(c);
         return ResponseEntity.ok(resources);
     }
 

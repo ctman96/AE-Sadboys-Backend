@@ -32,8 +32,7 @@ public class Location {
         super();
     }
 
-    public Location(Integer id, String name, String code, boolean locked) {
-        this.id = id;
+    public Location(String name, String code, boolean locked) {
         this.name = name;
         this.code = code;
         this.locked = locked;

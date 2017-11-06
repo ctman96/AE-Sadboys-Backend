@@ -11,7 +11,6 @@ import javax.persistence.*;
 public class LabelColour {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String key;
     private String colour;
 

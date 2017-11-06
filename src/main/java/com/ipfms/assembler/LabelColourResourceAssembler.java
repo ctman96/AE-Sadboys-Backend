@@ -7,6 +7,7 @@ import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -17,9 +18,11 @@ public class LabelColourResourceAssembler implements ResourceAssembler<LabelColo
         resource.add(new Link("http://labelcolours/" + labelColour.getKey()).withSelfRel());
         return resource;
     }
-    public Resources<LabelColour> toResources(List<LabelColour> labelColours){
-        Resources<LabelColour> resources = new Resources<>(labelColours);
-        resources.add(new Link("http://labelcolours/"));
+    public List<Resource<LabelColour>> toResources(List<LabelColour> labelColours){
+        List<Resource<LabelColour>> resources = new ArrayList<>();
+        for(LabelColour c : labelColours){
+            resources.add(toResource(c));
+        }
         return resources;
     }
 

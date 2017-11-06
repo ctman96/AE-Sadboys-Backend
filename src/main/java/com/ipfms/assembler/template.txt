@@ -17,10 +17,11 @@ public class TODOResourceAssembler implements ResourceAssembler<TODO, Resource<T
         resource.add(new Link("http://todos/" + toDo.getId()).withSelfRel());
         return resource;
     }
-    public Resources<TODO> toResources(List<TODO> toDos){
-        Resources<TODO> resources = new Resources<>(toDos);
-        resources.add(new Link("http://todos/"));
+    public List<Resource<TODO>> toResources(List<TODO> toDos){
+        List<Resource<TODO>> resources = new ArrayList<>();
+        for(TODO c : toDos){
+            resources.add(toResource(c));
+        }
         return resources;
     }
-
 }
