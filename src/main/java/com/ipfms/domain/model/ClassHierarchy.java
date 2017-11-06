@@ -1,5 +1,7 @@
 package com.ipfms.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,11 +15,13 @@ public class ClassHierarchy {
 
     @ManyToOne
     @JoinColumn(name="ParentId", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"parentHierarchies", "childHierarchies", "records"})
     private Classification parent;
     private int rel;
 
     @ManyToOne
     @JoinColumn(name="ChildId", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"parentHierarchies", "childHierarchies", "records"})
     private Classification child;
 
     public ClassHierarchy() {

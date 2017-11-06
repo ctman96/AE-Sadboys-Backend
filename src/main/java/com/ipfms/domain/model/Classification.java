@@ -1,6 +1,7 @@
 package com.ipfms.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,11 +18,11 @@ public class Classification {
     private String keyword;
     private Date updatedAt;
 
-    @JsonIgnore
+    @JsonIgnoreProperties({"parentHierarchies","childHierarchies","records"})
     @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="parent", cascade=CascadeType.ALL)
     private Set<ClassHierarchy> parentHierarchies;
 
-    @JsonIgnore
+    @JsonIgnoreProperties({"parentHierarchies","childHierarchies","records"})
     @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="child", cascade=CascadeType.ALL)
     private Set<ClassHierarchy> childHierarchies;
 
