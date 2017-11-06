@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController{
 
     private final UserRepository userRepository;
@@ -29,7 +30,7 @@ public class UserController{
         this.userResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping()
     public ResponseEntity<List<Resource<User>>> showUsers() {
         List<User> c = (ArrayList<User>) userRepository.findAll();
         if (c == null) {
@@ -39,7 +40,7 @@ public class UserController{
         return ResponseEntity.ok(resources);
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
+    @RequestMapping( value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<User>> getUser(@PathVariable("id") Integer id){
         User c = userRepository.findById(id);
         if (c == null) {
@@ -48,7 +49,7 @@ public class UserController{
         Resource<User> resource = userResourceAssembler.toResource(c);
         return ResponseEntity.ok(resource);
     }
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="", params = "userId", method = RequestMethod.GET)
+    @RequestMapping( value="", params = "userId", method = RequestMethod.GET)
     ResponseEntity<Resource<User>> getUser(@RequestParam("userId") String userId){
         User c = userRepository.findByUserId(userId);
         if (c == null) {

@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/classifications")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ClassificationController{
 
     private final ClassificationRepository classificationRepository;
@@ -29,7 +30,7 @@ public class ClassificationController{
         this.classificationResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping()
     public ResponseEntity<List<Resource<Classification>>> showClassHierarchies() {
         List<Classification> c = (ArrayList<Classification>) classificationRepository.findAll();
         if (c == null) {
@@ -40,7 +41,7 @@ public class ClassificationController{
     }
 
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
+    @RequestMapping(value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<Classification>> getClassification(@PathVariable("id") Integer id){
         Classification c = classificationRepository.findById(id);
         if (c == null) {

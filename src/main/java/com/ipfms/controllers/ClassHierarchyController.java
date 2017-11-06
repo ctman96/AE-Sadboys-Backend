@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/classhierarchies")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ClassHierarchyController{
 
     private final ClassHierarchyRepository classHierarchyRepository;
@@ -29,7 +30,7 @@ public class ClassHierarchyController{
         this.classHierarchyResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping()
     public ResponseEntity<List<Resource<ClassHierarchy>>> showClassHierarchies() {
         List<ClassHierarchy> c = (ArrayList<ClassHierarchy>) classHierarchyRepository.findAll();
         if (c == null) {
@@ -40,7 +41,7 @@ public class ClassHierarchyController{
     }
 
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
+    @RequestMapping(value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<ClassHierarchy>> getClassHierarchy(@PathVariable("id") Integer id){
         ClassHierarchy c = classHierarchyRepository.findById(id);
         if (c == null) {

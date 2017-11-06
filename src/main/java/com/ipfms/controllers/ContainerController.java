@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/containers")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ContainerController{
 
     private final ContainerRepository containerRepository;
@@ -29,7 +30,7 @@ public class ContainerController{
         this.containerResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping()
     public ResponseEntity<List<Resource<Container>>> showContainers() {
         List<Container> c = (ArrayList<Container>) containerRepository.findAll();
         if (c == null) {
@@ -40,7 +41,7 @@ public class ContainerController{
     }
 
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
+    @RequestMapping(value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<Container>> getContainer(@PathVariable("id") Integer id){
         Container c = containerRepository.findById(id);
         if (c == null) {

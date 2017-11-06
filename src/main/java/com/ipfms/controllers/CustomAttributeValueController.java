@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/customattributevalues")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CustomAttributeValueController{
 
     private final CustomAttributeValueRepository customAttributeValueRepository;
@@ -29,7 +30,7 @@ public class CustomAttributeValueController{
         this.customAttributeValueResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping()
     public ResponseEntity<List<Resource<CustomAttributeValue>>> showCustomAttributeValues() {
         List<CustomAttributeValue> c = (ArrayList<CustomAttributeValue>) customAttributeValueRepository.findAll();
         if (c == null) {
@@ -40,7 +41,7 @@ public class CustomAttributeValueController{
     }
 
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
+    @RequestMapping( value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<CustomAttributeValue>> getCustomAttributeValue(@PathVariable("id") Integer id){
         CustomAttributeValue c = customAttributeValueRepository.findById(id);
         if (c == null) {

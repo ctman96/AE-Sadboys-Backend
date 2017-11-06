@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/customattributelookups")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CustomAttributeLookupController{
 
     private final CustomAttributeLookupRepository customAttributeLookupRepository;
@@ -29,7 +30,7 @@ public class CustomAttributeLookupController{
         this.customAttributeLookupResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping()
     public ResponseEntity<List<Resource<CustomAttributeLookup>>> showCustomAttributeLookups() {
         List<CustomAttributeLookup> c = (ArrayList<CustomAttributeLookup>) customAttributeLookupRepository.findAll();
         if (c == null) {
@@ -40,7 +41,7 @@ public class CustomAttributeLookupController{
     }
 
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
+    @RequestMapping( value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<CustomAttributeLookup>> getCustomAttributeLookup(@PathVariable("id") Integer id){
         CustomAttributeLookup c = customAttributeLookupRepository.findById(id);
         if (c == null) {

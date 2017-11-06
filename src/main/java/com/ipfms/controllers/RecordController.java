@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/records")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RecordController{
 
     private final RecordRepository recordRepository;
@@ -29,7 +30,7 @@ public class RecordController{
         this.recordResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping()
     public ResponseEntity<List<Resource<Record>>> showRecords() {
         List<Record> c = (ArrayList<Record>) recordRepository.findAll();
         if (c == null) {
@@ -40,7 +41,7 @@ public class RecordController{
     }
 
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
+    @RequestMapping( value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<Record>> getRecord(@PathVariable("id") Integer id){
         Record c = recordRepository.findById(id);
         if (c == null) {

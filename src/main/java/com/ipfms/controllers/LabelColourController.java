@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/labelcolours")
+@CrossOrigin(origins = "http://localhost:4200")
 public class LabelColourController{
 
     private final LabelColourRepository labelColourRepository;
@@ -29,7 +30,7 @@ public class LabelColourController{
         this.labelColourResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping()
     public ResponseEntity<List<Resource<LabelColour>>> showLabelColours() {
         List<LabelColour> c = (ArrayList<LabelColour>) labelColourRepository.findAll();
         if (c == null) {
@@ -40,7 +41,7 @@ public class LabelColourController{
     }
 
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{key}", method = RequestMethod.GET)
+    @RequestMapping( value="/{key}", method = RequestMethod.GET)
     ResponseEntity<Resource<LabelColour>> getLabelColour(@PathVariable("key") String key){
         LabelColour c = labelColourRepository.findByKey(key);
         if (c == null) {

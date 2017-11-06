@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/roles")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RoleController{
 
     private final RoleRepository roleRepository;
@@ -29,7 +30,7 @@ public class RoleController{
         this.roleResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping()
     public ResponseEntity<List<Resource<Role>>> showRoles() {
         List<Role> c = (ArrayList<Role>) roleRepository.findAll();
         if (c == null) {
@@ -40,7 +41,7 @@ public class RoleController{
     }
 
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
+    @RequestMapping( value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<Role>> getRole(@PathVariable("id") Integer id){
         Role c = roleRepository.findById(id);
         if (c == null) {

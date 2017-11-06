@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/locations")
+@CrossOrigin(origins = "http://localhost:4200")
 public class LocationController{
 
     private final LocationRepository locationRepository;
@@ -29,7 +30,7 @@ public class LocationController{
         this.locationResourceAssembler = resourceAssembler;
     }
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE)
+    @RequestMapping()
     public ResponseEntity<List<Resource<Location>>> showLocations() {
         List<Location> c = (ArrayList<Location>) locationRepository.findAll();
         if (c == null) {
@@ -40,7 +41,7 @@ public class LocationController{
     }
 
 
-    @RequestMapping(produces = APPLICATION_JSON_VALUE, value="/{id}", method = RequestMethod.GET)
+    @RequestMapping( value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<Location>> getLocation(@PathVariable("id") Integer id){
         Location c = locationRepository.findById(id);
         if (c == null) {
