@@ -14,13 +14,14 @@ public class ClassHierarchy {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name="ParentId", insertable = false, updatable = false)
+    @JoinColumn(name="ParentId")
     @JsonIgnoreProperties({"parentHierarchies", "childHierarchies", "records"})
     private Classification parent;
+
     private int rel;
 
     @ManyToOne
-    @JoinColumn(name="ChildId", insertable = false, updatable = false)
+    @JoinColumn(name="ChildId")
     @JsonIgnoreProperties({"parentHierarchies", "childHierarchies", "records"})
     private Classification child;
 

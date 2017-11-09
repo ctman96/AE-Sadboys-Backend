@@ -2,7 +2,9 @@ package com.ipfms.controllers;
 
 import com.ipfms.assembler.ClassHierarchyResourceAssembler;
 import com.ipfms.domain.model.ClassHierarchy;
+import com.ipfms.domain.model.Classification;
 import com.ipfms.domain.repository.ClassHierarchyRepository;
+import com.ipfms.domain.repository.ClassificationRepository;
 import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
@@ -23,11 +25,13 @@ public class ClassHierarchyController{
 
     private final ClassHierarchyRepository classHierarchyRepository;
     private final ClassHierarchyResourceAssembler classHierarchyResourceAssembler;
+    private final ClassificationRepository classificationRepository;
 
     @Autowired
-    public ClassHierarchyController(ClassHierarchyResourceAssembler resourceAssembler, ClassHierarchyRepository repository){
+    public ClassHierarchyController(ClassHierarchyResourceAssembler resourceAssembler, ClassHierarchyRepository repository, ClassificationRepository classRepository){
         this.classHierarchyRepository = repository;
         this.classHierarchyResourceAssembler = resourceAssembler;
+        this.classificationRepository = classRepository;
     }
 
     @RequestMapping()
@@ -51,9 +55,18 @@ public class ClassHierarchyController{
         return ResponseEntity.ok(resource);
     }
 
+    //Handles Create and Update. If the Request body contains an Id, it will update that hierarchy,
+    //Otherwise, saves the new hierarchy with a generated Id
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<Void> createClassHierarchy(@RequestBody ClassHierarchy classHierarchy) {
+        System.out.println("In 'createClassHierarchy'");
+        Integer parentId = classHierarchy.getParent().getId();
+        Integer childId = classHierarchy.getChild().getId();
+        Integer rel = classHierarchy.getRel();
+        classHierarchy.setParent(classificationRepository.findById(parentId));
+        classHierarchy.setChild(classificationRepository.findById(childId));
         classHierarchyRepository.save(classHierarchy);
+        System.out.println("Exiting 'createClassHierarchy'");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
