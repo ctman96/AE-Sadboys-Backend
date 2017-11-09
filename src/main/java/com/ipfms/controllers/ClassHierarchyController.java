@@ -20,7 +20,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/classhierarchies")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ClassHierarchyController{
 
     private final ClassHierarchyRepository classHierarchyRepository;
@@ -36,22 +35,26 @@ public class ClassHierarchyController{
 
     @RequestMapping()
     public ResponseEntity<List<Resource<ClassHierarchy>>> showClassHierarchies() {
+        System.out.println("In 'showClassHierarchies'");
         List<ClassHierarchy> c = (ArrayList<ClassHierarchy>) classHierarchyRepository.findAll();
         if (c == null) {
             throw new EntityNotFoundException("No ClassHierarchies found");
         }
         List<Resource<ClassHierarchy>> resources = classHierarchyResourceAssembler.toResources(c);
+        System.out.println("Exiting 'showClassHierarchies'");
         return ResponseEntity.ok(resources);
     }
 
 
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     ResponseEntity<Resource<ClassHierarchy>> getClassHierarchy(@PathVariable("id") Integer id){
+        System.out.println("In 'getClassHierarchy'");
         ClassHierarchy c = classHierarchyRepository.findById(id);
         if (c == null) {
             throw new EntityNotFoundException("ClassHierarchy not found - id: " + id);
         }
         Resource<ClassHierarchy> resource = classHierarchyResourceAssembler.toResource(c);
+        System.out.println("Exiting 'getClassHierarchy'");
         return ResponseEntity.ok(resource);
     }
 
@@ -72,7 +75,9 @@ public class ClassHierarchyController{
 
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteClassHierarchy(@PathVariable("id") Integer id){
+        System.out.println("In 'deleteClassHierarchy'");
         classHierarchyRepository.delete(id);
+        System.out.println("Exiting 'deleteClassHierarchy'");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

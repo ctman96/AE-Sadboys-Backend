@@ -18,7 +18,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/customattributes")
-@CrossOrigin(origins = "http://localhost:4200")
 public class CustomAttributeController{
 
     private final CustomAttributeRepository customAttributeRepository;

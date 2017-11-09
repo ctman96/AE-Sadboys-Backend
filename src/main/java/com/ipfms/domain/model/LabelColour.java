@@ -11,7 +11,10 @@ import javax.persistence.*;
 public class LabelColour {
 
     @Id
+    @Column(name="`Key`")
     private String key;
+
+    @Column(name="`Colour`")
     private String colour;
 
     public LabelColour() {

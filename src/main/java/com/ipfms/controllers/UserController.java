@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:4200")
 public class UserController{
 
     private final UserRepository userRepository;
@@ -62,7 +62,20 @@ public class UserController{
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<Void> updateUser(@RequestBody User user) {
         User c = userRepository.findByUserId(user.getUserId());
-        userRepository.save(user);
+        if (c != null) {
+            userRepository.save(user);
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/currentuser", method = RequestMethod.GET)
+    ResponseEntity<Resource<User>> getCurrentUser(HttpServletRequest request){
+        String userId = (String)request.getAttribute("currentUserId");
+        User cur = userRepository.findByUserId(userId);
+        if (cur == null) {
+            throw new EntityNotFoundException("User not found - id: " + userId);
+        }
+        Resource<User> resource = userResourceAssembler.toResource(cur);
+        return ResponseEntity.ok(resource);
     }
 }

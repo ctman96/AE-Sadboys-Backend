@@ -18,7 +18,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/locations")
-@CrossOrigin(origins = "http://localhost:4200")
 public class LocationController{
 
     private final LocationRepository locationRepository;
@@ -51,6 +50,7 @@ public class LocationController{
         return ResponseEntity.ok(resource);
     }
 
+    //TODO
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<Void> createLocation(@RequestBody Location location) {
         locationRepository.save(location);

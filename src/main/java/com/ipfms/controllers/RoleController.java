@@ -18,7 +18,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/roles")
-@CrossOrigin(origins = "http://localhost:4200")
 public class RoleController{
 
     private final RoleRepository roleRepository;
@@ -51,6 +50,7 @@ public class RoleController{
         return ResponseEntity.ok(resource);
     }
 
+    //TODO
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<Void> createRole(@RequestBody Role role) {
         roleRepository.save(role);
