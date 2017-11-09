@@ -5,6 +5,10 @@ import com.ipfms.domain.model.Classification;
 import com.ipfms.domain.repository.ClassificationRepository;
 import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
@@ -12,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -30,14 +35,26 @@ public class ClassificationController{
     }
 
     @RequestMapping()
-    ResponseEntity<List<Resource<Classification>>> showClassHierarchies() {
-        System.out.println("In 'showClassHierarchies'");
-        List<Classification> c = (ArrayList<Classification>) classificationRepository.findAll();
-        if (c == null) {
-            throw new EntityNotFoundException("No Classifications found");
+    ResponseEntity<PagedResources<Classification>> showClassifications(
+            @RequestParam(value = "pageSize", required = false) Integer size,
+            @RequestParam(value = "page", required = false) Integer page) {
+        System.out.println("In 'showClassifications'");
+        if(size == null){
+            size = 10;
         }
-        List<Resource<Classification>> resources = classificationResourceAssembler.toResources(c);
-        System.out.println("Exiting 'showClassHierarchies'");
+        if(page == null){
+            page = 0;
+        }
+        Pageable pageable = new PageRequest(page, size);
+        Page<Classification> pageResult = classificationRepository.findAll(pageable);
+        if (pageResult == null) {
+            throw new EntityNotFoundException("No Classifications found: Page="+page+", Size="+size);
+        }
+        PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
+                pageResult.getSize(), pageResult.getNumber(),
+                pageResult.getTotalElements(), pageResult.getTotalPages());
+        PagedResources<Classification> resources = new PagedResources<Classification>(pageResult.getContent(), metadata);
+        System.out.println("Exiting 'showClassifications'");
         return ResponseEntity.ok(resources);
     }
 
@@ -57,6 +74,7 @@ public class ClassificationController{
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<Void> createClassification(@RequestBody Classification classification) {
         System.out.println("In 'createClassification'");
+        classification.setUpdatedAt(new Date());
         classificationRepository.save(classification);
         System.out.println("Exiting 'createClassification'");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
