@@ -1,29 +1,36 @@
 package com.ipfms.domain.model;
 
-import io.katharsis.resource.annotations.JsonApiId;
-import io.katharsis.resource.annotations.JsonApiResource;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by Cody on 2017-10-21.
  */
-
-@JsonApiResource(type = "containers")
+@Entity
+@Table(name = "containers")
 public class Container {
-    @JsonApiId
-    private long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String number;
     private String title;
     private String consignmentCode;
     private Date createdAt;
     private Date updatedAt;
 
+    @JsonIgnore
+    @OneToMany(targetEntity=Record.class, mappedBy="container", cascade=CascadeType.ALL)
+    private Set<Record> records;
+
     public Container() {
         super();
     }
 
-    public Container(long id, String number, String title, String consignmentCode, Date createdAt, Date updatedAt) {
-        this.id = id;
+    public Container(String number, String title, String consignmentCode, Date createdAt, Date updatedAt) {
         this.number = number;
         this.title = title;
         this.consignmentCode = consignmentCode;
@@ -31,11 +38,11 @@ public class Container {
         this.updatedAt = updatedAt;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

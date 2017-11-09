@@ -1,36 +1,40 @@
 package com.ipfms.domain.model;
 
-import io.katharsis.resource.annotations.JsonApiId;
-import io.katharsis.resource.annotations.JsonApiResource;
+import javax.persistence.*;
 
 /**
  * Created by Cody on 2017-10-21.
  */
 
-@JsonApiResource(type = "recordTypes")
+@Entity
+@Table(name = "recordtypes")
 public class RecordType {
-    @JsonApiId
-    private long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String name;
     private String numberPattern;
-    private int defaultScheduled;
+
+    @ManyToOne()
+    @JoinColumn(name="DefaultScheduleId")
+    private RetentionSchedule defaultSchedule;
 
     public RecordType() {
         super();
     }
 
-    public RecordType(long id, String name, String numberPattern, int defaultScheduled) {
-        this.id = id;
+    public RecordType(String name, String numberPattern, RetentionSchedule defaultSchedule) {
         this.name = name;
         this.numberPattern = numberPattern;
-        this.defaultScheduled = defaultScheduled;
+        this.defaultSchedule = defaultSchedule;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -50,11 +54,11 @@ public class RecordType {
         this.numberPattern = numberPattern;
     }
 
-    public int getDefaultScheduled() {
-        return defaultScheduled;
+    public RetentionSchedule getDefaultSchedule() {
+        return defaultSchedule;
     }
 
-    public void setDefaultScheduled(int defaultScheduled) {
-        this.defaultScheduled = defaultScheduled;
+    public void setDefaultSchedule(RetentionSchedule defaultSchedule) {
+        this.defaultSchedule = defaultSchedule;
     }
 }

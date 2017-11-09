@@ -1,41 +1,54 @@
 package com.ipfms.domain.model;
 
-import io.katharsis.resource.annotations.JsonApiId;
-import io.katharsis.resource.annotations.JsonApiResource;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonApiResource(type = "classificationHierarchy")
+import javax.persistence.*;
+
+@Entity
+@Table(name = "classhierarchy")
 public class ClassHierarchy {
-    @JsonApiId
-    private int id;
-    private int parentId;
+
+    @Id
+    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name="ParentId")
+    @JsonIgnoreProperties({"parentHierarchies", "childHierarchies", "records"})
+    private Classification parent;
+
     private int rel;
-    private int childId;
+
+    @ManyToOne
+    @JoinColumn(name="ChildId")
+    @JsonIgnoreProperties({"parentHierarchies", "childHierarchies", "records"})
+    private Classification child;
 
     public ClassHierarchy() {
         super();
     }
 
-    public ClassHierarchy(int id, int parentId, int rel, int childId) {
-        this.id = id;
-        this.parentId = parentId;
+    public ClassHierarchy(Classification parent, int rel, Classification child) {
+        this.parent = parent;
         this.rel = rel;
-        this.childId = childId;
+        this.child = child;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getParentId() {
-        return parentId;
+    public Classification getParent() {
+        return parent;
     }
 
-    public void setParentId(int parentId) {
-        this.parentId = parentId;
+    public void setParent(Classification parent) {
+        this.parent = parent;
     }
 
     public int getRel() {
@@ -46,11 +59,11 @@ public class ClassHierarchy {
         this.rel = rel;
     }
 
-    public int getChildId() {
-        return childId;
+    public Classification getChild() {
+        return child;
     }
 
-    public void setChildId(int childId) {
-        this.childId = childId;
+    public void setChild(Classification child) {
+        this.child = child;
     }
 }

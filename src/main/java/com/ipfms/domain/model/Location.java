@@ -1,36 +1,48 @@
 package com.ipfms.domain.model;
 
-import io.katharsis.resource.annotations.JsonApiId;
-import io.katharsis.resource.annotations.JsonApiResource;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by Cody on 2017-10-21.
  */
 
-@JsonApiResource(type = "locations")
+@Entity
+@Table(name = "locations")
 public class Location {
-    @JsonApiId
-    private long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String name;
     private String code;
     private boolean locked;
+
+    @ManyToMany(mappedBy = "locations")
+    private Set<User> users;
+
+    @JsonIgnore
+    @OneToMany(targetEntity=Record.class, mappedBy="location", cascade=CascadeType.ALL)
+    private Set<Record> records;
 
     public Location() {
         super();
     }
 
-    public Location(long id, String name, String code, boolean locked) {
-        this.id = id;
+    public Location(String name, String code, boolean locked) {
         this.name = name;
         this.code = code;
         this.locked = locked;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -56,5 +68,22 @@ public class Location {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    @JsonIgnoreProperties("locations")
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public Set<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(Set<Record> records) {
+        this.records = records;
     }
 }

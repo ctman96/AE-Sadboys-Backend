@@ -14,4 +14,9 @@ Install dependencies: mvn clean install
 
 Run: mvn spring-boot:run
 
-http://localhost:9090/ipfms/resources-info to see all resource links
+###Configuration
+Environmental Variables:
++ ENV - set as 'dev' or 'prod' to toggle certain functionality. At the moment, the only change is switching the IdentityFilter.java functionality. If not present, defaults to dev functionality
++ CORS - set as the address of the frontend, if hosted at a separate location, to allow cross origin resource sharing.
+
+See application.properties in the resources folder for the rest of the configuration options.

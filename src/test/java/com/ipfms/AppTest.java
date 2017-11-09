@@ -1,4 +1,5 @@
-package io.katharsis;
+package com.ipfms;
+
 
 import junit.framework.Test;
 import junit.framework.TestCase;
