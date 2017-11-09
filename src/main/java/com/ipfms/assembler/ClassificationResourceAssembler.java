@@ -1,6 +1,7 @@
 package com.ipfms.assembler;
 
 import com.ipfms.domain.model.Classification;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ClassificationResourceAssembler implements ResourceAssembler<Classification, Resource<Classification>> {

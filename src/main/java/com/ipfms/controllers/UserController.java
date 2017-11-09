@@ -5,6 +5,9 @@ import com.ipfms.domain.model.User;
 import com.ipfms.domain.repository.UserRepository;
 import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
@@ -31,13 +34,24 @@ public class UserController{
     }
 
     @RequestMapping()
-    public ResponseEntity<List<Resource<User>>> showUsers() {
-        List<User> c = (ArrayList<User>) userRepository.findAll();
-        if (c == null) {
+    public ResponseEntity<Page<User>> showUsers(
+            @RequestParam(value = "pageSize", required = false) Integer size,
+            @RequestParam(value = "page", required = false) Integer page) {
+        System.out.println("In 'showRoles'");
+        if(size == null){
+            size = 10;
+        }
+        if(page == null){
+            page = 1;
+        }
+        Pageable pageable = new PageRequest(page, size);
+        Page<User> pageResult = userRepository.findAll(pageable);
+        if (pageResult == null) {
             throw new EntityNotFoundException("No Users found");
         }
-        List<Resource<User>> resources = userResourceAssembler.toResources(c);
-        return ResponseEntity.ok(resources);
+        //TODO
+        //List<Resource<User>> resources = userResourceAssembler.toResources(c);
+        return ResponseEntity.ok(pageResult);
     }
 
     @RequestMapping( value="/{id}", method = RequestMethod.GET)

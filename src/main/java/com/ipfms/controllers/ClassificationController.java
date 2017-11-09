@@ -5,6 +5,9 @@ import com.ipfms.domain.model.Classification;
 import com.ipfms.domain.repository.ClassificationRepository;
 import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
@@ -30,15 +33,25 @@ public class ClassificationController{
     }
 
     @RequestMapping()
-    ResponseEntity<List<Resource<Classification>>> showClassHierarchies() {
-        System.out.println("In 'showClassHierarchies'");
-        List<Classification> c = (ArrayList<Classification>) classificationRepository.findAll();
-        if (c == null) {
-            throw new EntityNotFoundException("No Classifications found");
+    ResponseEntity<Page<Classification>> showClassifications(
+            @RequestParam(value = "pageSize", required = false) Integer size,
+            @RequestParam(value = "page", required = false) Integer page) {
+        System.out.println("In 'showClassifications'");
+        if(size == null){
+            size = 10;
         }
-        List<Resource<Classification>> resources = classificationResourceAssembler.toResources(c);
-        System.out.println("Exiting 'showClassHierarchies'");
-        return ResponseEntity.ok(resources);
+        if(page == null){
+            page = 0;
+        }
+        Pageable pageable = new PageRequest(page, size);
+        Page<Classification> pageResult = classificationRepository.findAll(pageable);
+        if (pageResult == null) {
+            throw new EntityNotFoundException("No Classifications found: Page="+page+", Size="+size);
+        }
+        //TODO: Proper resources
+        //List<Resource<Classification>> resources = classificationResourceAssembler.toResources(c);
+        System.out.println("Exiting 'showClassifications'");
+        return ResponseEntity.ok(pageResult);
     }
 
 

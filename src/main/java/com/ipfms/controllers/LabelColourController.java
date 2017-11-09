@@ -5,6 +5,9 @@ import com.ipfms.domain.model.LabelColour;
 import com.ipfms.domain.repository.LabelColourRepository;
 import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
@@ -30,13 +33,25 @@ public class LabelColourController{
     }
 
     @RequestMapping()
-    public ResponseEntity<List<Resource<LabelColour>>> showLabelColours() {
-        List<LabelColour> c = (ArrayList<LabelColour>) labelColourRepository.findAll();
-        if (c == null) {
+    public ResponseEntity<Page<LabelColour>> showLabelColours(
+            @RequestParam(value = "pageSize", required = false) Integer size,
+            @RequestParam(value = "page", required = false) Integer page) {
+        System.out.println("In 'showLabelColours'");
+        if(size == null){
+            size = 10;
+        }
+        if(page == null){
+            page = 0;
+        }
+        Pageable pageable = new PageRequest(page, size);
+        Page<LabelColour> pageResult = labelColourRepository.findAll(pageable);
+        if (pageResult == null) {
             throw new EntityNotFoundException("No LabelColours found");
         }
-        List<Resource<LabelColour>> resources = labelColourResourceAssembler.toResources(c);
-        return ResponseEntity.ok(resources);
+        //TODO: Proper resources
+        //List<Resource<LabelColour>> resources = labelColourResourceAssembler.toResources(c);
+        System.out.println("Exiting 'showLabelColours'");
+        return ResponseEntity.ok(pageResult);
     }
 
 

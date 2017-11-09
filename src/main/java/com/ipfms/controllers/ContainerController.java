@@ -5,6 +5,9 @@ import com.ipfms.domain.model.Container;
 import com.ipfms.domain.repository.ContainerRepository;
 import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
@@ -30,13 +33,25 @@ public class ContainerController{
     }
 
     @RequestMapping()
-    public ResponseEntity<List<Resource<Container>>> showContainers() {
-        List<Container> c = (ArrayList<Container>) containerRepository.findAll();
-        if (c == null) {
+    public ResponseEntity<Page<Container>> showContainers(
+            @RequestParam(value = "pageSize", required = false) Integer size,
+            @RequestParam(value = "page", required = false) Integer page) {
+        System.out.println("In 'showContainers'");
+        if(size == null){
+            size = 10;
+        }
+        if(page == null){
+            page = 0;
+        }
+        Pageable pageable = new PageRequest(page, size);
+        Page<Container> pageResult = containerRepository.findAll(pageable);
+        if (pageResult == null) {
             throw new EntityNotFoundException("No Containers found");
         }
-        List<Resource<Container>> resources = containerResourceAssembler.toResources(c);
-        return ResponseEntity.ok(resources);
+        //TODO
+        //List<Resource<Container>> resources = containerResourceAssembler.toResources(c);
+        System.out.println("Exiting 'showContainers'");
+        return ResponseEntity.ok(pageResult);
     }
 
 
