@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -33,7 +35,7 @@ public class ClassificationController{
     }
 
     @RequestMapping()
-    ResponseEntity<Page<Classification>> showClassifications(
+    ResponseEntity<PagedResources<Classification>> showClassifications(
             @RequestParam(value = "pageSize", required = false) Integer size,
             @RequestParam(value = "page", required = false) Integer page) {
         System.out.println("In 'showClassifications'");
@@ -48,10 +50,12 @@ public class ClassificationController{
         if (pageResult == null) {
             throw new EntityNotFoundException("No Classifications found: Page="+page+", Size="+size);
         }
-        //TODO: Proper resources
-        //List<Resource<Classification>> resources = classificationResourceAssembler.toResources(c);
+        PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
+                pageResult.getSize(), pageResult.getNumber(),
+                pageResult.getTotalElements(), pageResult.getTotalPages());
+        PagedResources<Classification> resources = new PagedResources<Classification>(pageResult.getContent(), metadata);
         System.out.println("Exiting 'showClassifications'");
-        return ResponseEntity.ok(pageResult);
+        return ResponseEntity.ok(resources);
     }
 
 
@@ -70,6 +74,7 @@ public class ClassificationController{
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<Void> createClassification(@RequestBody Classification classification) {
         System.out.println("In 'createClassification'");
+        classification.setUpdatedAt(new Date());
         classificationRepository.save(classification);
         System.out.println("Exiting 'createClassification'");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class LabelColourController{
     }
 
     @RequestMapping()
-    public ResponseEntity<Page<LabelColour>> showLabelColours(
+    public ResponseEntity<PagedResources<LabelColour>> showLabelColours(
             @RequestParam(value = "pageSize", required = false) Integer size,
             @RequestParam(value = "page", required = false) Integer page) {
         System.out.println("In 'showLabelColours'");
@@ -48,10 +49,12 @@ public class LabelColourController{
         if (pageResult == null) {
             throw new EntityNotFoundException("No LabelColours found");
         }
-        //TODO: Proper resources
-        //List<Resource<LabelColour>> resources = labelColourResourceAssembler.toResources(c);
+        PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
+                pageResult.getSize(), pageResult.getNumber(),
+                pageResult.getTotalElements(), pageResult.getTotalPages());
+        PagedResources<LabelColour> resources = new PagedResources<LabelColour>(pageResult.getContent(), metadata);
         System.out.println("Exiting 'showLabelColours'");
-        return ResponseEntity.ok(pageResult);
+        return ResponseEntity.ok(resources);
     }
 
 

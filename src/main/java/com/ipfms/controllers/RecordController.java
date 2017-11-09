@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class RecordController{
     }
 
     @RequestMapping()
-    public ResponseEntity<Page<Record>> showRecords(
+    public ResponseEntity<PagedResources<Record>> showRecords(
             @RequestParam(value = "pageSize", required = false) Integer size,
             @RequestParam(value = "page", required = false) Integer page) {
         System.out.println("In 'showRecords'");
@@ -48,10 +49,12 @@ public class RecordController{
         if (pageResult == null) {
             throw new EntityNotFoundException("No Records found");
         }
-        //TODO
-        //List<Resource<Record>> resources = recordResourceAssembler.toResources(c);
+        PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
+                pageResult.getSize(), pageResult.getNumber(),
+                pageResult.getTotalElements(), pageResult.getTotalPages());
+        PagedResources<Record> resources = new PagedResources<Record>(pageResult.getContent(), metadata);
         System.out.println("Exiting 'showRecords'");
-        return ResponseEntity.ok(pageResult);
+        return ResponseEntity.ok(resources);
     }
 
 

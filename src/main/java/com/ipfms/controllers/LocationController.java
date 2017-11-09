@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class LocationController{
     }
 
     @RequestMapping()
-    public ResponseEntity<Page<Location>> showLocations(
+    public ResponseEntity<PagedResources<Location>> showLocations(
             @RequestParam(value = "pageSize", required = false) Integer size,
             @RequestParam(value = "page", required = false) Integer page) {
         System.out.println("In 'showLocations'");
@@ -48,10 +49,12 @@ public class LocationController{
         if (pageResult == null) {
             throw new EntityNotFoundException("No Locations found");
         }
-        //TODO
-        //List<Resource<Location>> resources = locationResourceAssembler.toResources(c);
+        PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
+                pageResult.getSize(), pageResult.getNumber(),
+                pageResult.getTotalElements(), pageResult.getTotalPages());
+        PagedResources<Location> resources = new PagedResources<Location>(pageResult.getContent(), metadata);
         System.out.println("Exiting 'showLocations'");
-        return ResponseEntity.ok(pageResult);
+        return ResponseEntity.ok(resources);
     }
 
 
