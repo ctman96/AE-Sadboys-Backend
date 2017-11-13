@@ -16,11 +16,11 @@ public class User {
     private String firstName;
     private String lastName;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(name="userroles", joinColumns = @JoinColumn(name="UserId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name="RoleId", referencedColumnName = "Id"))
     private Set<Role> roles;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(name="userlocations", joinColumns = @JoinColumn(name="UserId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name="LocationId", referencedColumnName = "Id"))
     private Set<Location> locations;
 
