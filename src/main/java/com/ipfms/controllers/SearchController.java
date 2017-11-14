@@ -86,16 +86,13 @@ public class SearchController {
         for(Record r : resultR){
             results.add(new SearchResult(r));
         }
-        if (results.size() == 0) {
-            throw new EntityNotFoundException("No Results found");
-        }
         //TODO Add filter requestparams, filter results before paging
 
         Pageable pageable = new PageRequest(page, size);
 
         int start = pageable.getOffset();
         int end = (start + pageable.getPageSize()) > results.size() ? results.size() : (start + pageable.getPageSize());
-        Page<SearchResult> pageResult = new PageImpl<SearchResult>(results.subList(start, end), pageable, results.size());
+        Page<SearchResult> pageResult = new PageImpl<>(results.subList(start, end), pageable, results.size());
 
         PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
                 pageResult.getSize(), pageResult.getNumber(),
