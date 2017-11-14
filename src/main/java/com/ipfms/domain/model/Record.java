@@ -2,12 +2,9 @@ package com.ipfms.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
-import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
-import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import com.ipfms.filters.*;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Parameter;
 
 
 import javax.persistence.*;
@@ -19,6 +16,16 @@ import java.util.Set;
  * Created by Cody on 2017-10-21.
  */
 
+/*@FullTextFilterDefs({
+        @FullTextFilterDef(name="recordType", impl = RecordTypeFilterFactory.class),
+        @FullTextFilterDef(name="location", impl = LocationFilterFactory.class),
+        @FullTextFilterDef(name="classification", impl = ClassificationFilterFactory.class),
+        @FullTextFilterDef(name="createdAt", impl = CreatedAtFilterFactory.class),
+        @FullTextFilterDef(name="updatedAt", impl = UpdatedAtFilterFactory.class),
+        @FullTextFilterDef(name="closedAt", impl = ClosedAtFilterFactory.class),
+        @FullTextFilterDef(name="recordState", impl = RecordStateFilterFactory.class),
+        @FullTextFilterDef(name="retentionSchedule", impl = RecordScheduleFilterFactory.class)
+})*/
 @Entity
 @Indexed
 @Table(name = "records")

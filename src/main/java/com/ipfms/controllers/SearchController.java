@@ -43,49 +43,76 @@ public class SearchController {
     public ResponseEntity<PagedResources<SearchResult>> search(
             @RequestParam(value="query", required=true) String query,
             @RequestParam(value = "pageSize", required = false) Integer size,
-            @RequestParam(value = "page", required = false) Integer page){
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value="records", required = false) Boolean includeRecords,
+            @RequestParam(value="containers", required= false) Boolean includeContainers){
         System.out.println("In 'search'");
+
+        //Check for null parameters, set to default values
         if(size == null){
             size = 10;
         }
         if(page == null){
             page = 0;
         }
+        if(includeRecords == null){
+            includeRecords = true;
+        }
+        if(includeContainers == null){
+            includeContainers = true;
+        }
+
+        List<SearchResult> results = new ArrayList<>();
+
+
         EntityManager em = entityManagerFactory.createEntityManager();
         FullTextEntityManager fullTextEntityManager =
                 org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
         em.getTransaction().begin();
 
-        QueryBuilder qbr = fullTextEntityManager.getSearchFactory()
-                .buildQueryBuilder().forEntity(Record.class).get();
-        QueryBuilder qbc = fullTextEntityManager.getSearchFactory()
-                .buildQueryBuilder().forEntity(Container.class).get();
+        //Build and execute Record Query
+        if(includeRecords) {
+            QueryBuilder qbr = fullTextEntityManager.getSearchFactory()
+                    .buildQueryBuilder().forEntity(Record.class).get();
 
-        org.apache.lucene.search.Query luceneQueryR = qbr
-                .keyword()
-                .onFields("number", "title", "consignmentCode")
-                .matching(query)
-                .createQuery();
-        org.apache.lucene.search.Query luceneQueryC = qbc
-                .keyword()
-                .onFields("number", "title", "consignmentCode")
-                .matching(query)
-                .createQuery();
-        javax.persistence.Query jpaQueryR =
-                fullTextEntityManager.createFullTextQuery(luceneQueryR, Record.class);
-        javax.persistence.Query jpaQueryC =
-                fullTextEntityManager.createFullTextQuery(luceneQueryC, Container.class);
+            org.apache.lucene.search.Query luceneQueryR = qbr
+                    .keyword()
+                    .onFields("number", "title", "consignmentCode")
+                    .matching(query)
+                    .createQuery();
 
-        List<Record> resultR = jpaQueryR.getResultList();
-        List<Container> resultC = jpaQueryC.getResultList();
-        List<SearchResult> results = new ArrayList<>();
+            javax.persistence.Query jpaQueryR =
+                    fullTextEntityManager.createFullTextQuery(luceneQueryR, Record.class);
 
-        for(Container c : resultC){
-            results.add(new SearchResult(c));
+            List<Record> resultR = jpaQueryR.getResultList();
+
+            for (Record r : resultR) {
+                results.add(new SearchResult(r));
+            }
         }
-        for(Record r : resultR){
-            results.add(new SearchResult(r));
+
+        //Build and execute Container Query
+        if(includeContainers) {
+            QueryBuilder qbc = fullTextEntityManager.getSearchFactory()
+                    .buildQueryBuilder().forEntity(Container.class).get();
+
+
+            org.apache.lucene.search.Query luceneQueryC = qbc
+                    .keyword()
+                    .onFields("number", "title", "consignmentCode")
+                    .matching(query)
+                    .createQuery();
+
+            javax.persistence.Query jpaQueryC =
+                    fullTextEntityManager.createFullTextQuery(luceneQueryC, Container.class);
+            List<Container> resultC = jpaQueryC.getResultList();
+
+            for(Container c : resultC){
+                results.add(new SearchResult(c));
+            }
         }
+
+
         //TODO Add filter requestparams, filter results before paging
 
         Pageable pageable = new PageRequest(page, size);
