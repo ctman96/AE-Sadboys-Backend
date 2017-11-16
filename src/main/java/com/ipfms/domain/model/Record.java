@@ -2,30 +2,19 @@ package com.ipfms.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.ipfms.filters.*;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
 
 
 import javax.persistence.*;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.Set;
 
 /**
  * Created by Cody on 2017-10-21.
  */
 
-/*@FullTextFilterDefs({
-        @FullTextFilterDef(name="recordType", impl = RecordTypeFilterFactory.class),
-        @FullTextFilterDef(name="location", impl = LocationFilterFactory.class),
-        @FullTextFilterDef(name="classification", impl = ClassificationFilterFactory.class),
-        @FullTextFilterDef(name="createdAt", impl = CreatedAtFilterFactory.class),
-        @FullTextFilterDef(name="updatedAt", impl = UpdatedAtFilterFactory.class),
-        @FullTextFilterDef(name="closedAt", impl = ClosedAtFilterFactory.class),
-        @FullTextFilterDef(name="recordState", impl = RecordStateFilterFactory.class),
-        @FullTextFilterDef(name="retentionSchedule", impl = RecordScheduleFilterFactory.class)
-})*/
 @Entity
 @Indexed
 @Table(name = "records")
@@ -49,7 +38,7 @@ public class Record {
     @JoinColumn(name="TypeId")
     private RecordType type;
 
-    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
+    @Field(index = Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String consignmentCode;
 
     @ManyToOne()
