@@ -164,7 +164,7 @@ public class SearchController {
                 pageResult.getTotalElements(), pageResult.getTotalPages());
 
         PagedResources<SearchResult> resources = new PagedResources<SearchResult>(pageResult.getContent(), metadata);
-        System.out.println("Exiting 'showRecords'");
+        System.out.println("Exiting 'search'");
         return ResponseEntity.ok(resources);
     }
 
