@@ -7,6 +7,7 @@ import com.ipfms.domain.model.SearchResult;
 import com.ipfms.domain.repository.ContainerRepository;
 import com.ipfms.domain.repository.RecordRepository;
 import com.ipfms.exception.EntityNotFoundException;
+import org.hibernate.CacheMode;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -32,15 +33,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/search")
 public class SearchController {
-    private final RecordRepository recordRepository;
-    private final ContainerRepository containerRepository;
     private final EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public SearchController(EntityManagerFactory entityManagerFactory, RecordRepository recordRepository, ContainerRepository containerRepository) {
+    public SearchController(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
-        this.recordRepository = recordRepository;
-        this.containerRepository = containerRepository;
     }
 
     @RequestMapping()
@@ -194,7 +191,12 @@ public class SearchController {
         FullTextEntityManager fullTextEntityManager =
                 Search.getFullTextEntityManager(entityManager);
         try {
-            fullTextEntityManager.createIndexer().startAndWait();
+            fullTextEntityManager
+                    .createIndexer(Record.class, Container.class)
+                    .batchSizeToLoadObjects( 25 )
+                    .threadsToLoadObjects( 12 )
+                    .idFetchSize( 150 )
+                    .startAndWait();
         } catch (InterruptedException e) {
             // Exception handling
             e.printStackTrace();

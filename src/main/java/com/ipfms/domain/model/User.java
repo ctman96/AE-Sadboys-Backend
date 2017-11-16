@@ -83,4 +83,23 @@ public class User {
     public void setLocations(Set<Location> locations) {
         this.locations = locations;
     }
+
+    //TODO?
+    public Boolean isAdmin(){
+        for(Role r : roles){
+            if (r.getId() == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Boolean isRMC(){
+        for(Role r : roles){
+            if (r.getId() == 1 || r.getId() == 2 ) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

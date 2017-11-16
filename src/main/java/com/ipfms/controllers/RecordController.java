@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -65,6 +66,13 @@ public class RecordController{
             throw new EntityNotFoundException("Record not found - id: " + id);
         }
         Resource<Record> resource = recordResourceAssembler.toResource(c);
+        return ResponseEntity.ok(resource);
+    }
+
+    @RequestMapping(value="/count", method = RequestMethod.GET)
+    ResponseEntity<Resource<Long>> getRecordCount(){
+        Resource<Long> resource = new Resource<>(recordRepository.count());
+        resource.add(new Link("http://records/count", "self"));
         return ResponseEntity.ok(resource);
     }
 
