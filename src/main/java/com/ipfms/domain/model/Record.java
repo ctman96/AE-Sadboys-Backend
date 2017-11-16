@@ -1,9 +1,14 @@
 package com.ipfms.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
+
 
 import javax.persistence.*;
-import java.util.Date;
+
+import java.sql.Date;
 import java.util.Set;
 
 /**
@@ -11,6 +16,7 @@ import java.util.Set;
  */
 
 @Entity
+@Indexed
 @Table(name = "records")
 public class Record {
 
@@ -18,7 +24,10 @@ public class Record {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Field(index= Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String number;
+
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String title;
 
     @ManyToOne()
@@ -29,6 +38,7 @@ public class Record {
     @JoinColumn(name="TypeId")
     private RecordType type;
 
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String consignmentCode;
 
     @ManyToOne()
@@ -48,6 +58,7 @@ public class Record {
     private Date closedAt;
 
     @ManyToMany(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"parentHierarchies", "childHierarchies"})
     @JoinTable(name="recordclassifications", joinColumns = @JoinColumn(name="RecordId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name="ClassId", referencedColumnName = "Id"))
     private Set<Classification> classifications;
 

@@ -77,6 +77,17 @@
       <version>${hibernate.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-search-orm</artifactId>
+      <version>5.6.0.Final</version>
+    </dependency>
+    <dependency>
+     <groupId>org.infinispan</groupId>
+     <artifactId>infinispan-directory-provider</artifactId>
+     <version>9.0.1.Final</version>
+    </dependency>
+
 
     <dependency>
       <groupId>junit</groupId>
@@ -102,6 +113,7 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+          <meminitial>1024m</meminitial>
         </configuration>
       </plugin>
       <!-- spring-boot-maven-plugin -->

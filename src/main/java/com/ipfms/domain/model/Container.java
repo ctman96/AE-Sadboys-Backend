@@ -1,24 +1,35 @@
 package com.ipfms.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Set;
 
 /**
  * Created by Cody on 2017-10-21.
  */
+
 @Entity
+@Indexed
 @Table(name = "containers")
 public class Container {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
+    @Field(index=Index.YES, analyze= Analyze.YES, store= Store.NO)
     private String number;
+
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String title;
+
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String consignmentCode;
+
     private Date createdAt;
     private Date updatedAt;
 
