@@ -25,7 +25,7 @@ public class Location {
     private Set<User> users;
 
     @JsonIgnore
-    @OneToMany(targetEntity=Record.class, mappedBy="location", cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+    @OneToMany(targetEntity=Record.class, mappedBy="location", cascade=CascadeType.ALL)
     private Set<Record> records;
 
     public Location() {
