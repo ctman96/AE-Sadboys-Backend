@@ -30,26 +30,26 @@ public class Record {
     @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String title;
 
-    @ManyToOne()
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="ScheduleId")
     private RetentionSchedule schedule;
 
-    @ManyToOne()
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="TypeId")
     private RecordType type;
 
     @Field(index = Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String consignmentCode;
 
-    @ManyToOne()
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="StateId")
     private RecordState state;
 
-    @ManyToOne()
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="ContainerId")
     private Container container;
 
-    @ManyToOne()
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="LocationId")
     private Location location;
 
