@@ -193,6 +193,7 @@ public class SearchController {
         try {
             fullTextEntityManager
                     .createIndexer(Record.class, Container.class)
+                    .typesToIndexInParallel( 2 )
                     .batchSizeToLoadObjects( 25 )
                     .threadsToLoadObjects( 12 )
                     .idFetchSize( 150 )

@@ -38,7 +38,7 @@ public class Record {
     @JoinColumn(name="TypeId")
     private RecordType type;
 
-    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
+    @Field(index = Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String consignmentCode;
 
     @ManyToOne()
