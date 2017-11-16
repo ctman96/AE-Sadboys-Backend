@@ -1,25 +1,17 @@
 package com.ipfms.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ipfms.filters.ClosedAtFilterFactory;
-import com.ipfms.filters.CreatedAtFilterFactory;
-import com.ipfms.filters.UpdatedAtFilterFactory;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Set;
 
 /**
  * Created by Cody on 2017-10-21.
  */
 
-/*@FullTextFilterDefs({
-        @FullTextFilterDef(name="createdAt", impl = CreatedAtFilterFactory.class),
-        @FullTextFilterDef(name="updatedAt", impl = UpdatedAtFilterFactory.class),
-        @FullTextFilterDef(name="closedAt", impl = ClosedAtFilterFactory.class),
-})*/
 @Entity
 @Indexed
 @Table(name = "containers")
@@ -37,6 +29,7 @@ public class Container {
 
     @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String consignmentCode;
+
     private Date createdAt;
     private Date updatedAt;
 
