@@ -124,7 +124,7 @@ public class SearchController {
         }
 
         //Build and execute Container Query
-        if(includeContainers) {
+        if(includeContainers && ((classification == null) && (location == null) && (schedule == null) && (state == null) && (type == null))) {
             QueryBuilder qbc = fullTextEntityManager.getSearchFactory()
                     .buildQueryBuilder().forEntity(Container.class).get();
 
