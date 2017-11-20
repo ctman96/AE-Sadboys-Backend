@@ -8,18 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/containers")
@@ -66,6 +60,13 @@ public class ContainerController{
             throw new EntityNotFoundException("Container not found - id: " + id);
         }
         Resource<Container> resource = containerResourceAssembler.toResource(c);
+        return ResponseEntity.ok(resource);
+    }
+
+    @RequestMapping(value="/count", method = RequestMethod.GET)
+    ResponseEntity<Resource<Long>> getContainerCount(){
+        Resource<Long> resource = new Resource<>(containerRepository.count());
+        resource.add(new Link("http://containers/count", "self"));
         return ResponseEntity.ok(resource);
     }
 }
