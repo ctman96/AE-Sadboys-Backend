@@ -107,11 +107,11 @@ public class SearchController {
                 doAdd = doAdd && ((updatedAt == null) || compareDates(r.getUpdatedAt(), updatedAt));
                 doAdd = doAdd && ((closedAt == null) || compareDates(r.getClosedAt(), closedAt));
                 doAdd = doAdd && ((location == null) || (
-                        r.getLocation().getName().equals(location) || r.getLocation().getName().equals(location)));
+                        r.getLocation().getName().equals(location) || r.getLocation().getCode().equals(location) || r.getLocation().getId().toString().equals(location)));
                 doAdd = doAdd && ((schedule == null)
-                        || ( r.getSchedule().getName().equals(schedule) || r.getSchedule().getCode().equals(schedule)));
-                doAdd = doAdd && ((state == null) || (r.getState().getName().equals(state)));
-                doAdd = doAdd && ((type == null) || (r.getType().getName().equals(type)));
+                        || ( r.getSchedule().getName().equals(schedule) || r.getSchedule().getCode().equals(schedule) || r.getSchedule().getId().toString().equals(schedule) ));
+                doAdd = doAdd && ((state == null) || (r.getState().getName().equals(state)) || (r.getState().getId().toString().equals(state)));
+                doAdd = doAdd && ((type == null) || (r.getType().getName().equals(type)) || (r.getType().getId().toString().equals(type)));
 
                 if (doAdd) {
                     results.add(new SearchResult(r));
