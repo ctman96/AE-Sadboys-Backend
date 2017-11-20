@@ -52,8 +52,8 @@ public class SearchController {
             //Filters
             @RequestParam(value="classification", required=false) String classification,
             @RequestParam(value="created", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date createdAt,
-            @RequestParam(value="updated", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date  updatedAt,
-            @RequestParam(value="closed", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date  closedAt,
+            @RequestParam(value="updated", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date updatedAt,
+            @RequestParam(value="closed", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date closedAt,
             @RequestParam(value="location", required=false) String location,
             @RequestParam(value="schedule", required=false) String schedule,
             @RequestParam(value="state", required=false) String state,
@@ -107,11 +107,11 @@ public class SearchController {
                 doAdd = doAdd && ((updatedAt == null) || compareDates(r.getUpdatedAt(), updatedAt));
                 doAdd = doAdd && ((closedAt == null) || compareDates(r.getClosedAt(), closedAt));
                 doAdd = doAdd && ((location == null) || (
-                        r.getLocation().getName().equals(location) || r.getLocation().getName().equals(location)));
+                        r.getLocation().getName().equals(location) || r.getLocation().getCode().equals(location) || r.getLocation().getId().toString().equals(location)));
                 doAdd = doAdd && ((schedule == null)
-                        || ( r.getSchedule().getName().equals(schedule) || r.getSchedule().getCode().equals(schedule)));
-                doAdd = doAdd && ((state == null) || (r.getState().getName().equals(state)));
-                doAdd = doAdd && ((type == null) || (r.getType().getName().equals(type)));
+                        || ( r.getSchedule().getName().equals(schedule) || r.getSchedule().getCode().equals(schedule) || r.getSchedule().getId().toString().equals(schedule) ));
+                doAdd = doAdd && ((state == null) || (r.getState().getName().equals(state)) || (r.getState().getId().toString().equals(state)));
+                doAdd = doAdd && ((type == null) || (r.getType().getName().equals(type)) || (r.getType().getId().toString().equals(type)));
 
                 if (doAdd) {
                     results.add(new SearchResult(r));
