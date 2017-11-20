@@ -13,14 +13,14 @@ public class ClassHierarchy {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="ParentId")
     @JsonIgnoreProperties({"parentHierarchies", "childHierarchies", "records"})
     private Classification parent;
 
     private int rel;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="ChildId")
     @JsonIgnoreProperties({"parentHierarchies", "childHierarchies", "records"})
     private Classification child;

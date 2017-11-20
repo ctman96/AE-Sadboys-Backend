@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,17 @@ public class LabelColourController{
                 pageResult.getTotalElements(), pageResult.getTotalPages());
         PagedResources<LabelColour> resources = new PagedResources<LabelColour>(pageResult.getContent(), metadata);
         System.out.println("Exiting 'showLabelColours'");
+        return ResponseEntity.ok(resources);
+    }
+    @RequestMapping("/all")
+    public ResponseEntity<Resources<LabelColour>> showAllLabelColours() {
+        System.out.println("In 'showAllLabelColours'");
+        Iterable<LabelColour> labelcolours = labelColourRepository.findAll();
+        if (labelcolours == null) {
+            throw new EntityNotFoundException("No Roles found");
+        }
+        Resources<LabelColour> resources = new Resources<>(labelcolours);
+        System.out.println("Exiting 'showAllLabelColours'");
         return ResponseEntity.ok(resources);
     }
 

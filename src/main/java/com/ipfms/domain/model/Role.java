@@ -14,7 +14,8 @@ public class Role {
     private Integer id;
     private String name;
 
-    @ManyToMany(mappedBy = "roles", fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy = "roles", fetch=FetchType.LAZY)
+    @JsonIgnoreProperties({"roles", "locations"})
     private Set<User> users;
 
     public Role() {

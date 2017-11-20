@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,18 @@ public class LocationController{
                 pageResult.getTotalElements(), pageResult.getTotalPages());
         PagedResources<Location> resources = new PagedResources<Location>(pageResult.getContent(), metadata);
         System.out.println("Exiting 'showLocations'");
+        return ResponseEntity.ok(resources);
+    }
+
+    @RequestMapping("/all")
+    public ResponseEntity<Resources<Location>> showAllLocations() {
+        System.out.println("In 'showAllLocations'");
+        Iterable<Location> locations = locationRepository.findAll();
+        if (locations == null) {
+            throw new EntityNotFoundException("No Roles found");
+        }
+        Resources<Location> resources = new Resources<>(locations);
+        System.out.println("Exiting 'showAllLocations'");
         return ResponseEntity.ok(resources);
     }
 
