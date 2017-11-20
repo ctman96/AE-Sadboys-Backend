@@ -18,12 +18,12 @@ public class Classification {
     private String keyword;
     private Date updatedAt;
 
-    @JsonIgnoreProperties({"parentHierarchies","childHierarchies","records"})
-    @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="parent", cascade=CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="parent", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private Set<ClassHierarchy> parentHierarchies;
 
-    @JsonIgnoreProperties({"parentHierarchies","childHierarchies","records"})
-    @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="child", cascade=CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="child", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private Set<ClassHierarchy> childHierarchies;
 
     @JsonIgnore

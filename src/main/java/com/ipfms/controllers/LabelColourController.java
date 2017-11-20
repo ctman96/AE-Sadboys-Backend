@@ -15,10 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/labelcolours")
@@ -54,6 +50,17 @@ public class LabelColourController{
                 pageResult.getTotalElements(), pageResult.getTotalPages());
         PagedResources<LabelColour> resources = new PagedResources<LabelColour>(pageResult.getContent(), metadata);
         System.out.println("Exiting 'showLabelColours'");
+        return ResponseEntity.ok(resources);
+    }
+    @RequestMapping("/all")
+    public ResponseEntity<Resources<LabelColour>> showAllLabelColours() {
+        System.out.println("In 'showAllLabelColours'");
+        Iterable<LabelColour> labelcolours = labelColourRepository.findAll();
+        if (labelcolours == null) {
+            throw new EntityNotFoundException("No Roles found");
+        }
+        Resources<LabelColour> resources = new Resources<>(labelcolours);
+        System.out.println("Exiting 'showAllLabelColours'");
         return ResponseEntity.ok(resources);
     }
 

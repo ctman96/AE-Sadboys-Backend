@@ -21,11 +21,12 @@ public class Location {
     private String code;
     private boolean locked;
 
-    @ManyToMany(mappedBy = "locations")
+    @ManyToMany(mappedBy = "locations", fetch=FetchType.LAZY)
+    @JsonIgnoreProperties({"roles", "locations"})
     private Set<User> users;
 
     @JsonIgnore
-    @OneToMany(targetEntity=Record.class, mappedBy="location", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity=Record.class, mappedBy="location", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private Set<Record> records;
 
     public Location() {

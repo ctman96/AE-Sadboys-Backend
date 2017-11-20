@@ -11,15 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/records")
@@ -74,17 +68,5 @@ public class RecordController{
         Resource<Long> resource = new Resource<>(recordRepository.count());
         resource.add(new Link("http://records/count", "self"));
         return ResponseEntity.ok(resource);
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Void> createRecord(@RequestBody Record record) {
-        recordRepository.save(record);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteRecord(@PathVariable("id") Integer id){
-        recordRepository.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
