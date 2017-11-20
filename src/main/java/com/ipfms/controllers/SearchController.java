@@ -52,8 +52,8 @@ public class SearchController {
             //Filters
             @RequestParam(value="classification", required=false) String classification,
             @RequestParam(value="created", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date createdAt,
-            @RequestParam(value="updated", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date  updatedAt,
-            @RequestParam(value="closed", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date  closedAt,
+            @RequestParam(value="updated", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date updatedAt,
+            @RequestParam(value="closed", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date closedAt,
             @RequestParam(value="location", required=false) String location,
             @RequestParam(value="schedule", required=false) String schedule,
             @RequestParam(value="state", required=false) String state,
