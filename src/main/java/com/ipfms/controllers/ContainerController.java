@@ -68,16 +68,4 @@ public class ContainerController{
         Resource<Container> resource = containerResourceAssembler.toResource(c);
         return ResponseEntity.ok(resource);
     }
-
-    @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Void> createContainer(@RequestBody Container container) {
-        containerRepository.save(container);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteContainer(@PathVariable("id") Integer id){
-        containerRepository.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 }
