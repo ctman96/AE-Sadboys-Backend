@@ -8,7 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+/**
+ * Rest Controller
+ * <p>
+ * Handles RequestMapping for the /recordtypes namespace
+ */
 @RestController
 @RequestMapping("/recordtypes")
 public class RecordTypeController {
@@ -19,6 +23,13 @@ public class RecordTypeController {
         this.recordTypeRepository = recordTypeRepository;
     }
 
+    /**
+     * Returns a ResponseEntity containing all RecordType Objects as HATEOAS Resources.
+     * <p>
+     * Mapped to the the '/recordtypes' route
+     *
+     * @return ResponseEntity containing all RecordTypes, as Hateoas Resources
+     */
     @RequestMapping()
     public ResponseEntity<Resources<RecordType>> getTypes(){
         System.out.println("In 'getTypes'");

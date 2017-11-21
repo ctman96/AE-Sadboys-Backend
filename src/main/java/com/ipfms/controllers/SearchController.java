@@ -26,6 +26,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Rest Controller
+ * <p>
+ * Handles RequestMapping for the /search namespace
+ */
 @RestController
 @RequestMapping("/search")
 public class SearchController {
@@ -36,6 +41,27 @@ public class SearchController {
         this.entityManagerFactory = entityManagerFactory;
     }
 
+    /**
+     * Returns a Response Entity containing a page of HATEOAS PagedResources of SearchResult objects, after
+     * performing a filtered, full text search with the given parameters.
+     * <p>
+     * Mapped to '/search', with all parameters as RequestParameters
+     *
+     * @param query             the string used as a query for the fulltext search
+     * @param size              the size of pages you want returned (optional, default 10)
+     * @param page              the page number, for the given size (optional, default 0)
+     * @param includeRecords    whether or not to include Records in the SearchResults (optional, default true)
+     * @param includeContainers whether or not to include Containers in the Search Results (optional, default true)
+     * @param classification    the classification value to use to filter Records (optional, default null)
+     * @param createdAt         the createdAt date value used to filter Records and Containers (optional, default null)
+     * @param updatedAt         the updatedAt date value used to filter Records and Containers (optional, default null)
+     * @param closedAt          the closedAt date value used to filter Records (optional, default null)
+     * @param location          the location value used to filter Records (optional, default null)
+     * @param schedule          the schedule value used to filter Records (optional, default null)
+     * @param state             the state value used to filter Records (optional, default null)
+     * @param type              the type value used to filter Records (optional, default null)
+     * @return                  Response Entity containing a page of HATEOAS PagedResources of SearchResult objects
+     */
     @RequestMapping()
     public ResponseEntity<PagedResources<SearchResult>> search(
             //Search Query
@@ -181,6 +207,11 @@ public class SearchController {
         return fmt.format(date1).equals(fmt.format(date2));
     }
 
+    /**
+     * Reloads the search index.
+     * Warning: The search index will be unavailable for the duration of the process
+     * Should take less than 5 minutes
+     */
     @RequestMapping("/reload-index")
     public void reload(){
         EntityManager entityManager = entityManagerFactory.createEntityManager();

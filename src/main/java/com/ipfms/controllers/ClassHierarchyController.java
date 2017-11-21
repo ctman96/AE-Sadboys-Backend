@@ -15,7 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+/**
+ * Rest Controller
+ * <p>
+ * Handles RequestMapping for the /classhierarchies namespace
+ */
 @RestController
 @RequestMapping("/classhierarchies")
 public class ClassHierarchyController{
@@ -31,6 +35,19 @@ public class ClassHierarchyController{
         this.classificationRepository = classRepository;
     }
 
+    /**
+     * Returns a ResponseEntity object containing a page of ClassHierarchy, as HATEOAS PagedResources,
+     * with the optionally specified page parameters. The optional size argument
+     * specifies the page's size, must be an integer value. Defaults to '10'.
+     * The optional page argument specifies the page number. Must be an integer,
+     * Defaults to '0'
+     * <p>
+     * This is mapped to the '/classhierarchies' route
+     *
+     * @param size  the size of pages you want returned (optional, default 10)
+     * @param page  the page number, for the given size (optional, default 0)
+     * @return      the ResponseEntity containing the page of ClassHierarchy Hateoas Resources
+     */
     @RequestMapping()
     public ResponseEntity<PagedResources<ClassHierarchy>> showClassHierarchies(
             @RequestParam(value = "pageSize", required = false) Integer size,
@@ -56,8 +73,17 @@ public class ClassHierarchyController{
     }
 
 
+    /**
+     * Returns a Response Entity containing a ClassHierarchy object, as a HATEOAS Resource,
+     * with an id value matching the given id parameter. The id
+     * argument corresponds to the 'id' PathVariable from the
+     * RequestMapping, '/classhierarchies/{id}'
+     *
+     * @param id   the id value of the ClassHierarchy you are requesting
+     * @return      Response Entity containing the corresponding ClassHierarchy, as a HATEOAS Resource
+     */
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
-    ResponseEntity<Resource<ClassHierarchy>> getClassHierarchy(@PathVariable("id") Integer id){
+    public ResponseEntity<Resource<ClassHierarchy>> getClassHierarchy(@PathVariable("id") Integer id){
         System.out.println("In 'getClassHierarchy'");
         ClassHierarchy c = classHierarchyRepository.findById(id);
         if (c == null) {
@@ -68,10 +94,20 @@ public class ClassHierarchyController{
         return ResponseEntity.ok(resource);
     }
 
-    //Handles Create and Update. If the Request body contains an Id, it will update that hierarchy,
-    //Otherwise, saves the new hierarchy with a generated Id
+    /**
+     * Attempts to Create or Update a ClassHierarchy in the ClassHierarchyRepository.
+     * classHierarchy argument is a ClassHierarchy object with an optional id field.
+     * The ClassHierarchyRepository will attempt to save this object. If given an
+     * id value, it will attempt to update the ClassHierarchy with corresponding id.
+     * If id is not given, will create a new ClassHierarchy with a generated Id and specified values.
+     * <p>
+     * Mapped to the '/classhierarchies' route POST request
+     *
+     * @param classHierarchy the ClassHierarchy object to be created/updated
+     * @return a void ResponseEntity with a NO_CONTENT status
+     */
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Void> createClassHierarchy(@RequestBody ClassHierarchy classHierarchy) {
+    public ResponseEntity<Void> createClassHierarchy(@RequestBody ClassHierarchy classHierarchy) {
         System.out.println("In 'createClassHierarchy'");
         Integer parentId = classHierarchy.getParent().getId();
         Integer childId = classHierarchy.getChild().getId();
@@ -83,8 +119,15 @@ public class ClassHierarchyController{
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * Attempts to delete a ClassHierarchy from the ClassHierarchyRepository.
+     * id argument is an integer specifying the id of the ClassHierarchy you wish to
+     * delete.
+     * @param id the id of the ClassHierarchy to be deleted
+     * @return a void ResponseEntity with a NO_CONTENT status
+     */
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteClassHierarchy(@PathVariable("id") Integer id){
+    public ResponseEntity<Void> deleteClassHierarchy(@PathVariable("id") Integer id){
         System.out.println("In 'deleteClassHierarchy'");
         classHierarchyRepository.delete(id);
         System.out.println("Exiting 'deleteClassHierarchy'");
