@@ -5,6 +5,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+/**
+ * JSpring Data repository managing CustomAttributeLookup CRUD
+ */
 @Component
 @Repository
 public interface CustomAttributeLookupRepository extends CrudRepository<CustomAttributeLookup, Integer>{

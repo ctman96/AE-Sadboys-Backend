@@ -7,6 +7,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Spring Data repository managing CustomAttribute CRUD
+ */
 @Component
 @Repository
 public interface CustomAttributeRepository extends CrudRepository<CustomAttribute, Integer>{

@@ -185,16 +185,48 @@ public class SearchController {
                                              String location, String schedule, String state, String type){
         List<SearchResult> results = new ArrayList<>();
 
-        //Records
-        Iterable<Record> resultR = recordRepository.findAll();
-        for (Record r : resultR){
-            results.add(new SearchResult(r));
+        EntityManager em = entityManagerFactory.createEntityManager();
+        FullTextEntityManager fullTextEntityManager =
+                org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
+        em.getTransaction().begin();
+
+        if(includeRecords) {
+            QueryBuilder qbr = fullTextEntityManager.getSearchFactory()
+                    .buildQueryBuilder().forEntity(Record.class).get();
+
+            org.apache.lucene.search.Query luceneQuery = qbr
+                    .all()
+                    .createQuery();
+
+            javax.persistence.Query jpaQueryR =
+                    fullTextEntityManager.createFullTextQuery(luceneQuery, Record.class);
+
+            List<Record> resultR = jpaQueryR.getResultList();
+
+            //Filter and add to full results
+            results.addAll(filterRecords(resultR, classification,
+                    createdAt, updatedAt, closedAt,
+                    location, schedule, state, type
+            ));
         }
 
-        //Containers
-        Iterable<Container> resultC = containerRepository.findAll();
-        for (Container c : resultC){
-            results.add(new SearchResult(c));
+        if(includeContainers) {
+            QueryBuilder qbc = fullTextEntityManager.getSearchFactory()
+                    .buildQueryBuilder().forEntity(Container.class).get();
+
+            org.apache.lucene.search.Query luceneQuery = qbc
+                    .all()
+                    .createQuery();
+
+            javax.persistence.Query jpaQueryC =
+                    fullTextEntityManager.createFullTextQuery(luceneQuery, Container.class);
+
+            List<Container> resultC = jpaQueryC.getResultList();
+
+            //Filter and add to full results
+            results.addAll(
+                    filterContainers( resultC, createdAt, updatedAt)
+            );
         }
 
         return results;

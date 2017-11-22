@@ -10,9 +10,17 @@ import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.Filter;
 
+/**
+ * Spring Configuration for the application
+ */
 @Configuration
 public class IpfmsConfiguration {
 
+    /**
+     * Sets allowed CORS origin based on 'CORS' environment variable
+     *
+     * @return CorsFilter bean
+     */
     @Bean
     public CorsFilter corsFilter(){
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -33,6 +41,10 @@ public class IpfmsConfiguration {
         return bean;
     }
 
+    /**
+     * Registers the IdentityFilter
+     * @return identity filter registration bean
+     */
     @Bean
     public FilterRegistrationBean identityFilterRegistration(){
         FilterRegistrationBean registration = new FilterRegistrationBean();

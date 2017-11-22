@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Spring Data repository managing Container CRUD
+ */
 @Component
 @Repository
 public interface ContainerRepository extends CrudRepository<Container, Integer>{

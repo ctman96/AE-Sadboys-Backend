@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Spring Data repository managing Record CRUD
+ */
 @Component
 @Repository
 public interface RecordRepository extends CrudRepository<Record, Integer>{

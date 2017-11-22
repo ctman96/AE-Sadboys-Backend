@@ -7,6 +7,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Spring Data repository managing Location CRUD
+ */
 @Component
 @Repository
 public interface LocationRepository extends PagingAndSortingRepository<Location, Integer> {
