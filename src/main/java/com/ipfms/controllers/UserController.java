@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Rest Controller
- * <p>
- * Handles RequestMapping for the /users namespace
+ * Rest Controller -
+ * Handles RequestMapping for the '/users' namespace
  */
 @RestController
 @RequestMapping("/users")

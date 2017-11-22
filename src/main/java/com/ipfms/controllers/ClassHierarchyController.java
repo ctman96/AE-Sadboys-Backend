@@ -16,9 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Rest Controller
- * <p>
- * Handles RequestMapping for the /classhierarchies namespace
+ * Rest Controller -
+ * Handles RequestMapping for the '/classhierarchies' namespace
  */
 @RestController
 @RequestMapping("/classhierarchies")

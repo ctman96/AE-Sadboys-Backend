@@ -16,6 +16,7 @@ public class Classification {
     private Integer id;
     private String name;
     private String keyword;
+    @Column(name="UpdatedAt")
     private Date updatedAt;
 
     @JsonIgnore

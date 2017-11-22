@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Rest Controller
- * <p>
- * Handles RequestMapping for the /recordtypes namespace
+ * Rest Controller -
+ * Handles RequestMapping for the '/recordtypes' namespace
  */
 @RestController
 @RequestMapping("/recordtypes")

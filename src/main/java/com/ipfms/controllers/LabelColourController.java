@@ -16,9 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Rest Controller
- * <p>
- * Handles Requestmapping for the /labelcolours namespace
+ * Rest Controller -
+ * Handles Requestmapping for the '/labelcolours' namespace
  */
 @RestController
 @RequestMapping("/labelcolours")

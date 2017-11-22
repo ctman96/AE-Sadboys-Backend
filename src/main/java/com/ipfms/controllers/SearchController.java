@@ -31,9 +31,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Rest Controller
- * <p>
- * Handles RequestMapping for the /search namespace
+ * Rest Controller -
+ * Handles RequestMapping for the '/search' namespace
  */
 @RestController
 @RequestMapping("/search")
@@ -100,8 +99,8 @@ public class SearchController {
         System.out.println("In 'search'");
 
         //Check for null parameters, set to default values
-        if(query == null){
-            query="";
+        if(query.equals("null")){
+            query=null;
         }else{
             try {
                 UriUtils.decode(query, "UTF-8");
@@ -129,13 +128,20 @@ public class SearchController {
 
         List<SearchResult> results = new ArrayList<>();
 
-        if(quickSearch && (query != null)){
-            results.addAll(quickSearch(query));
-        }else{
+        if(quickSearch){
+            if (query != null) {
+                results.addAll(quickSearch(query));
+            }
+        }
+        else if (query != null) {
             results.addAll(
                     fullSearch(query, includeRecords, includeContainers, classification,
                             createdAt, updatedAt, closedAt, location, schedule, state, type)
             );
+        }
+        else {
+            results.addAll(getAllResults(includeRecords, includeContainers, classification,
+                    createdAt, updatedAt, closedAt, location, schedule, state, type));
         }
 
         Pageable pageable = new PageRequest(page, size);
@@ -168,6 +174,26 @@ public class SearchController {
         List<Container> resultC = containerRepository.findByNumberOrTitleOrConsignmentCode(query, query, query);
 
         for(Container c : resultC){
+            results.add(new SearchResult(c));
+        }
+
+        return results;
+    }
+
+    private List<SearchResult> getAllResults(Boolean includeRecords, Boolean includeContainers, String  classification,
+                                             Date createdAt, Date updatedAt, Date closedAt,
+                                             String location, String schedule, String state, String type){
+        List<SearchResult> results = new ArrayList<>();
+
+        //Records
+        Iterable<Record> resultR = recordRepository.findAll();
+        for (Record r : resultR){
+            results.add(new SearchResult(r));
+        }
+
+        //Containers
+        Iterable<Container> resultC = containerRepository.findAll();
+        for (Container c : resultC){
             results.add(new SearchResult(c));
         }
 
