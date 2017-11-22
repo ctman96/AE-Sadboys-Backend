@@ -15,7 +15,7 @@ import java.util.Set;
 public class Location {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String code;
@@ -26,7 +26,7 @@ public class Location {
     private Set<User> users;
 
     @JsonIgnore
-    @OneToMany(targetEntity=Record.class, mappedBy="location", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToMany(targetEntity=Record.class, mappedBy="location", fetch=FetchType.LAZY)
     private Set<Record> records;
 
     public Location() {

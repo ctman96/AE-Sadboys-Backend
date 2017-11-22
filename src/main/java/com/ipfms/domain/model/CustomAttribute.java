@@ -10,15 +10,15 @@ import java.util.Set;
 public class CustomAttribute {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
 
     @ManyToOne()
-    @JoinColumn(name="LookupId")
+    @JoinColumn(name="LookupId", foreignKey= @ForeignKey(name="fk_customattributeslookup"))
     private CustomAttributeLookup lookup;
 
-    @OneToMany(targetEntity=CustomAttributeValue.class, mappedBy="attribute", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity=CustomAttributeValue.class, mappedBy="attribute")
     private Set<CustomAttributeValue> attributeValues;
 
     public CustomAttribute() {

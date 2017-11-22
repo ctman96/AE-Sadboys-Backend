@@ -10,12 +10,12 @@ import java.util.Set;
 public class CustomAttributeLookup {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer setId;
     private String name;
 
-    @OneToMany(targetEntity=CustomAttribute.class, mappedBy="lookup", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity=CustomAttribute.class, mappedBy="lookup")
     private Set<CustomAttribute> customAttributes;
 
     public CustomAttributeLookup() {

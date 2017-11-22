@@ -18,7 +18,7 @@ import java.util.Set;
 public class Container {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Field(index=Index.YES, analyze= Analyze.YES, store= Store.NO)
@@ -34,7 +34,7 @@ public class Container {
     private Date updatedAt;
 
     @JsonIgnore
-    @OneToMany(targetEntity=Record.class, mappedBy="container", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity=Record.class, mappedBy="container")
     private Set<Record> records;
 
     public Container() {

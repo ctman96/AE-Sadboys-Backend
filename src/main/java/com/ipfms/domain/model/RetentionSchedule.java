@@ -10,18 +10,18 @@ import java.util.Set;
 public class RetentionSchedule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String code;
     private Integer years;
 
     @JsonIgnore
-    @OneToMany(targetEntity=Record.class, mappedBy="schedule", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity=Record.class, mappedBy="schedule")
     private Set<Record> records;
 
     @JsonIgnore
-    @OneToMany(targetEntity=RecordType.class, mappedBy="defaultSchedule", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity=RecordType.class, mappedBy="defaultSchedule")
     private Set<RecordType> recordTypes;
 
     public RetentionSchedule(){

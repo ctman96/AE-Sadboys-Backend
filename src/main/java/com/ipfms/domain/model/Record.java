@@ -21,7 +21,7 @@ import java.util.Set;
 public class Record {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Field(index= Index.YES, analyze=Analyze.YES, store=Store.NO)
@@ -31,35 +31,37 @@ public class Record {
     private String title;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="ScheduleId")
+    @JoinColumn(name="ScheduleId", foreignKey= @ForeignKey(name="FK_Records_Schedule"))
     private RetentionSchedule schedule;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="TypeId")
+    @JoinColumn(name="TypeId", foreignKey= @ForeignKey(name="FK_Records_RecordTypes"))
     private RecordType type;
 
     @Field(index = Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String consignmentCode;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="StateId")
+    @JoinColumn(name="StateId", foreignKey= @ForeignKey(name="FK_Records_RecordStates"))
     private RecordState state;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="ContainerId")
+    @JoinColumn(name="ContainerId", foreignKey= @ForeignKey(name="FK_Records_Containers"))
     private Container container;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="LocationId")
+    @JoinColumn(name="LocationId", foreignKey= @ForeignKey(name="FK_Records_Containers"))
     private Location location;
 
     private Date createdAt;
     private Date updatedAt;
     private Date closedAt;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JsonIgnoreProperties({"parentHierarchies", "childHierarchies"})
-    @JoinTable(name="recordclassifications", joinColumns = @JoinColumn(name="RecordId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name="ClassId", referencedColumnName = "Id"))
+    @JoinTable(name="recordclassifications",
+            joinColumns = @JoinColumn(name="RecordId", referencedColumnName = "Id", foreignKey= @ForeignKey(name="FK_RecordClassifications_Records")),
+            inverseJoinColumns = @JoinColumn(name="ClassId", referencedColumnName = "Id", foreignKey= @ForeignKey(name="FK_RecordClassifications_Classifications")))
     private Set<Classification> classifications;
 
     @JsonIgnore

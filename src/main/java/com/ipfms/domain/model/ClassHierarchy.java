@@ -10,18 +10,18 @@ public class ClassHierarchy {
 
     @Id
     @Column(name = "Id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="ParentId")
+    @JoinColumn(name="ParentId", foreignKey= @ForeignKey(name="FK_ClassHierarchy_ParentId"))
     @JsonIgnoreProperties({"parentHierarchies", "childHierarchies", "records"})
     private Classification parent;
 
     private int rel;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="ChildId")
+    @JoinColumn(name="ChildId", foreignKey= @ForeignKey(name="FK_ClassHierarchy_ChildId"))
     @JsonIgnoreProperties({"parentHierarchies", "childHierarchies", "records"})
     private Classification child;
 

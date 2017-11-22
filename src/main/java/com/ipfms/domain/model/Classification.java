@@ -12,7 +12,7 @@ import java.util.Set;
 public class Classification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String keyword;
@@ -20,11 +20,11 @@ public class Classification {
     private Date updatedAt;
 
     @JsonIgnore
-    @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="parent", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="parent", fetch=FetchType.LAZY)
     private Set<ClassHierarchy> parentHierarchies;
 
     @JsonIgnore
-    @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="child", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToMany(targetEntity=ClassHierarchy.class, mappedBy="child", fetch=FetchType.LAZY)
     private Set<ClassHierarchy> childHierarchies;
 
     @JsonIgnore
