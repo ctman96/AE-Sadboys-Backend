@@ -57,7 +57,7 @@ public class RoleController{
             page = 0;
         }
         Pageable pageable = new PageRequest(page, size);
-        Page<Role> pageResult = roleRepository.findAll(pageable);
+        Page<Role> pageResult = roleRepository.findByOrderByNameAsc(pageable);
         if (pageResult == null) {
             throw new EntityNotFoundException("No Roles found");
         }

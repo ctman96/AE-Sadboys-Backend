@@ -58,14 +58,14 @@ public class LabelColourController{
             page = 0;
         }
         Pageable pageable = new PageRequest(page, size);
-        Page<LabelColour> pageResult = labelColourRepository.findAll(pageable);
+        Page<LabelColour> pageResult = labelColourRepository.findByOrderByKeyAsc(pageable);
         if (pageResult == null) {
             throw new EntityNotFoundException("No LabelColours found");
         }
         PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
                 pageResult.getSize(), pageResult.getNumber(),
                 pageResult.getTotalElements(), pageResult.getTotalPages());
-        PagedResources<LabelColour> resources = new PagedResources<LabelColour>(pageResult.getContent(), metadata);
+        PagedResources<LabelColour> resources = new PagedResources<>(pageResult.getContent(), metadata);
         System.out.println("Exiting 'showLabelColours'");
         return ResponseEntity.ok(resources);
     }

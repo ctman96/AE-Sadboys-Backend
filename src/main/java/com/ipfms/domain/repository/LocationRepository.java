@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface LocationRepository extends PagingAndSortingRepository<Location, Integer> {
     Location findById(Integer id);
     Page<Location> findAll(Pageable pageable);
+    Page<Location> findByOrderByNameAsc(Pageable pageable);
 }

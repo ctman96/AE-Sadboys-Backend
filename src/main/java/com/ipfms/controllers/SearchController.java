@@ -4,6 +4,8 @@ import com.ipfms.domain.model.Classification;
 import com.ipfms.domain.model.Container;
 import com.ipfms.domain.model.Record;
 import com.ipfms.domain.model.SearchResult;
+import com.ipfms.domain.repository.ContainerRepository;
+import com.ipfms.domain.repository.RecordRepository;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -18,9 +20,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,19 +39,25 @@ import java.util.List;
 @RequestMapping("/search")
 public class SearchController {
     private final EntityManagerFactory entityManagerFactory;
+    private final ContainerRepository containerRepository;
+    private final RecordRepository recordRepository;
 
     @Autowired
-    public SearchController(EntityManagerFactory entityManagerFactory) {
+    public SearchController(EntityManagerFactory entityManagerFactory, ContainerRepository containerRepository, RecordRepository recordRepository) {
         this.entityManagerFactory = entityManagerFactory;
+        this.containerRepository = containerRepository;
+        this.recordRepository = recordRepository;
     }
 
     /**
      * Returns a Response Entity containing a page of HATEOAS PagedResources of SearchResult objects, after
-     * performing a filtered, full text search with the given parameters.
+     * performing a quick search or a filtered, full text search with the given parameters.
+     * Return page's size and page number are determined by the size and page parameters
      * <p>
      * Mapped to '/search', with all parameters as RequestParameters
      *
      * @param query             the string used as a query for the fulltext search
+     * @param quickSearch       Whether or not you want full(fulltext, filtered) or quick(exact) searching
      * @param size              the size of pages you want returned (optional, default 10)
      * @param page              the page number, for the given size (optional, default 0)
      * @param includeRecords    whether or not to include Records in the SearchResults (optional, default true)
@@ -65,7 +75,9 @@ public class SearchController {
     @RequestMapping()
     public ResponseEntity<PagedResources<SearchResult>> search(
             //Search Query
-            @RequestParam(value="query", required=true) String query,
+            @RequestParam(value="query", required=false) String query,
+
+            @RequestParam(value="qs", required=false) Boolean quickSearch,
 
             //Pagination settings
             @RequestParam(value = "pageSize", required = false) Integer size,
@@ -88,6 +100,20 @@ public class SearchController {
         System.out.println("In 'search'");
 
         //Check for null parameters, set to default values
+        if(query == null){
+            query="";
+        }else{
+            try {
+                UriUtils.decode(query, "UTF-8");
+            }
+            catch(UnsupportedEncodingException err){
+                System.out.println(err);
+            }
+        }
+        System.out.println("With Query: "+query);
+        if(quickSearch == null){
+            quickSearch = false;
+        }
         if(size == null){
             size = 10;
         }
@@ -103,6 +129,56 @@ public class SearchController {
 
         List<SearchResult> results = new ArrayList<>();
 
+        if(quickSearch && (query != null)){
+            results.addAll(quickSearch(query));
+        }else{
+            results.addAll(
+                    fullSearch(query, includeRecords, includeContainers, classification,
+                            createdAt, updatedAt, closedAt, location, schedule, state, type)
+            );
+        }
+
+        Pageable pageable = new PageRequest(page, size);
+
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > results.size() ? results.size() : (start + pageable.getPageSize());
+        Page<SearchResult> pageResult = new PageImpl<>(results.subList(start, end), pageable, results.size());
+
+        PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
+                pageResult.getSize(), pageResult.getNumber(),
+                pageResult.getTotalElements(), pageResult.getTotalPages());
+
+        PagedResources<SearchResult> resources = new PagedResources<>(pageResult.getContent(), metadata);
+        System.out.println("Exiting 'search'");
+        return ResponseEntity.ok(resources);
+    }
+
+    private List<SearchResult> quickSearch(String query){
+
+        List<SearchResult> results = new ArrayList<>();
+
+        List<Record> resultR = recordRepository.findByNumberOrTitleOrConsignmentCode(query, query, query);
+        //Records
+
+        for(Record r : resultR){
+            results.add(new SearchResult(r));
+        }
+
+        //Containers
+        List<Container> resultC = containerRepository.findByNumberOrTitleOrConsignmentCode(query, query, query);
+
+        for(Container c : resultC){
+            results.add(new SearchResult(c));
+        }
+
+        return results;
+    }
+
+    private List<SearchResult> fullSearch(String query, Boolean includeRecords, Boolean includeContainers,
+                                                      String classification, Date createdAt, Date updatedAt, Date closedAt,
+                                                      String location, String schedule, String state, String type){
+
+        List<SearchResult> results = new ArrayList<>();
 
         EntityManager em = entityManagerFactory.createEntityManager();
         FullTextEntityManager fullTextEntityManager =
@@ -126,23 +202,12 @@ public class SearchController {
             List<Record> resultR = jpaQueryR.getResultList();
 
             //Filter and add to full results
-            for (Record r : resultR) {
-                Boolean doAdd = true;
-                doAdd = doAdd && ((classification == null) ? true : checkClassifications(r, classification));
-                doAdd = doAdd && ((createdAt == null) || compareDates(r.getCreatedAt(), createdAt));
-                doAdd = doAdd && ((updatedAt == null) || compareDates(r.getUpdatedAt(), updatedAt));
-                doAdd = doAdd && ((closedAt == null) || compareDates(r.getClosedAt(), closedAt));
-                doAdd = doAdd && ((location == null) || (
-                        r.getLocation().getName().equals(location) || r.getLocation().getCode().equals(location) || r.getLocation().getId().toString().equals(location)));
-                doAdd = doAdd && ((schedule == null)
-                        || ( r.getSchedule().getName().equals(schedule) || r.getSchedule().getCode().equals(schedule) || r.getSchedule().getId().toString().equals(schedule) ));
-                doAdd = doAdd && ((state == null) || (r.getState().getName().equals(state)) || (r.getState().getId().toString().equals(state)));
-                doAdd = doAdd && ((type == null) || (r.getType().getName().equals(type)) || (r.getType().getId().toString().equals(type)));
-
-                if (doAdd) {
-                    results.add(new SearchResult(r));
-                }
-            }
+            results.addAll(
+                    filterRecords(resultR, classification,
+                            createdAt, updatedAt, closedAt,
+                            location, schedule, state, type
+                    )
+            );
         }
 
         //Build and execute Container Query
@@ -161,30 +226,56 @@ public class SearchController {
                     fullTextEntityManager.createFullTextQuery(luceneQueryC, Container.class);
             List<Container> resultC = jpaQueryC.getResultList();
 
-            for(Container c : resultC){
-                Boolean doAdd = true;
-                doAdd = doAdd && ((createdAt == null) || compareDates(c.getCreatedAt(), createdAt));
-                doAdd = doAdd && ((updatedAt == null) ||compareDates(c.getUpdatedAt(), updatedAt));
-                //TODO: Do containers get filtered by anything else, depending on subrecords?
-                if(doAdd) {
-                    results.add(new SearchResult(c));
-                }
-            }
+            //Filter and add to full results
+            results.addAll(
+                    filterContainers( resultC, createdAt, updatedAt)
+            );
         }
 
-        Pageable pageable = new PageRequest(page, size);
+        return results;
+    }
 
-        int start = pageable.getOffset();
-        int end = (start + pageable.getPageSize()) > results.size() ? results.size() : (start + pageable.getPageSize());
-        Page<SearchResult> pageResult = new PageImpl<>(results.subList(start, end), pageable, results.size());
+    private List<SearchResult> filterRecords(List<Record> records,
+                                       String classification,
+                                       Date createdAt,
+                                       Date updatedAt,
+                                       Date closedAt,
+                                       String location,
+                                       String schedule,
+                                       String state,
+                                       String type){
+        List<SearchResult> results = new ArrayList<>();
+        for (Record r : records) {
+            Boolean doAdd = true;
+            doAdd = doAdd && ((classification == null) ? true : checkClassifications(r, classification));
+            doAdd = doAdd && ((createdAt == null) || compareDates(r.getCreatedAt(), createdAt));
+            doAdd = doAdd && ((updatedAt == null) || compareDates(r.getUpdatedAt(), updatedAt));
+            doAdd = doAdd && ((closedAt == null) || compareDates(r.getClosedAt(), closedAt));
+            doAdd = doAdd && ((location == null) || (
+                    r.getLocation().getName().equals(location) || r.getLocation().getCode().equals(location) || r.getLocation().getId().toString().equals(location)));
+            doAdd = doAdd && ((schedule == null)
+                    || ( r.getSchedule().getName().equals(schedule) || r.getSchedule().getCode().equals(schedule) || r.getSchedule().getId().toString().equals(schedule) ));
+            doAdd = doAdd && ((state == null) || (r.getState().getName().equals(state)) || (r.getState().getId().toString().equals(state)));
+            doAdd = doAdd && ((type == null) || (r.getType().getName().equals(type)) || (r.getType().getId().toString().equals(type)));
+            if (doAdd) {
+                results.add(new SearchResult(r));
+            }
+        }
+        return results;
+    }
 
-        PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
-                pageResult.getSize(), pageResult.getNumber(),
-                pageResult.getTotalElements(), pageResult.getTotalPages());
-
-        PagedResources<SearchResult> resources = new PagedResources<SearchResult>(pageResult.getContent(), metadata);
-        System.out.println("Exiting 'search'");
-        return ResponseEntity.ok(resources);
+    private List<SearchResult> filterContainers(List<Container> containers, Date createdAt, Date updatedAt){
+        List<SearchResult> results = new ArrayList<>();
+        for(Container c : containers){
+            Boolean doAdd = true;
+            doAdd = doAdd && ((createdAt == null) || compareDates(c.getCreatedAt(), createdAt));
+            doAdd = doAdd && ((updatedAt == null) ||compareDates(c.getUpdatedAt(), updatedAt));
+            //TODO: Do containers get filtered by anything else, depending on subrecords?
+            if(doAdd) {
+                results.add(new SearchResult(c));
+            }
+        }
+        return results;
     }
 
     //Classification Filter Helper

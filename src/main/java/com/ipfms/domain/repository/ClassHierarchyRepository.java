@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClassHierarchyRepository extends CrudRepository<ClassHierarchy, Integer>{
     ClassHierarchy findById(Integer id);
-    ClassHierarchy save(ClassHierarchy classHierarchy);
     Page<ClassHierarchy> findAll(Pageable pageable);
+    Page<ClassHierarchy> findByOrderByParentAsc(Pageable pageable);
 }

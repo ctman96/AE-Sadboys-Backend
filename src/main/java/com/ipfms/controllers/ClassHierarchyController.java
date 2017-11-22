@@ -60,7 +60,7 @@ public class ClassHierarchyController{
             page = 0;
         }
         Pageable pageable = new PageRequest(page, size);
-        Page<ClassHierarchy> pageResult = classHierarchyRepository.findAll(pageable);
+        Page<ClassHierarchy> pageResult = classHierarchyRepository.findByOrderByParentAsc(pageable);
         if (pageResult == null) {
             throw new EntityNotFoundException("No ClassHierarchies found");
         }

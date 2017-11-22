@@ -59,7 +59,7 @@ public class UserController{
             page = 1;
         }
         Pageable pageable = new PageRequest(page, size);
-        Page<User> pageResult = userRepository.findAll(pageable);
+        Page<User> pageResult = userRepository.findByOrderByUserIdAsc(pageable);
         if (pageResult == null) {
             throw new EntityNotFoundException("No Users found");
         }

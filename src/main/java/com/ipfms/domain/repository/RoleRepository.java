@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface RoleRepository extends PagingAndSortingRepository<Role, Integer> {
     Role findById(Integer id);
     Page<Role> findAll(Pageable pageable);
+    Page<Role> findByOrderByNameAsc(Pageable pageable);
 }

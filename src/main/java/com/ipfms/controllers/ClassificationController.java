@@ -59,7 +59,7 @@ public class ClassificationController{
             page = 0;
         }
         Pageable pageable = new PageRequest(page, size);
-        Page<Classification> pageResult = classificationRepository.findAll(pageable);
+        Page<Classification> pageResult = classificationRepository.findByOrderByNameAsc(pageable);
         if (pageResult == null) {
             throw new EntityNotFoundException("No Classifications found: Page="+page+", Size="+size);
         }

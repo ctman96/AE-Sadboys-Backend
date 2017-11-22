@@ -58,7 +58,7 @@ public class LocationController{
             page = 0;
         }
         Pageable pageable = new PageRequest(page, size);
-        Page<Location> pageResult = locationRepository.findAll(pageable);
+        Page<Location> pageResult = locationRepository.findByOrderByNameAsc(pageable);
         if (pageResult == null) {
             throw new EntityNotFoundException("No Locations found");
         }
