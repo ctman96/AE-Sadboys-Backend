@@ -8,7 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+/**
+ * Rest Controller
+ * <p>
+ * Handles RequestMapping for the /retentionschedules namespace
+ */
 @RestController
 @RequestMapping("/retentionschedules")
 public class RetentionScheduleController {
@@ -19,6 +23,13 @@ public class RetentionScheduleController {
         this.retentionScheduleRepository = retentionScheduleRepository;
     }
 
+    /**
+     * Returns a ResponseEntity containing all RetentionSchedule Objects as HATEOAS Resources.
+     * <p>
+     * Mapped to the the '/retentionschedules' route
+     *
+     * @return ResponseEntity containing all RetentionSchedules, as Hateoas Resources
+     */
     @RequestMapping()
     public ResponseEntity<Resources<RetentionSchedule>> getSchedules(){
         System.out.println("In 'getSchedules'");

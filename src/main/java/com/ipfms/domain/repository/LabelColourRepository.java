@@ -12,5 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface LabelColourRepository extends PagingAndSortingRepository<LabelColour, Integer> {
     LabelColour findByKey(String key);
     Page<LabelColour> findAll(Pageable pageable);
+    Page<LabelColour> findByOrderByKeyAsc(Pageable pageable);
 }
 

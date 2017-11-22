@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface ClassificationRepository extends PagingAndSortingRepository<Classification, Integer> {
     Classification findById(Integer id);
     Page<Classification> findAll(Pageable pageable);
+    Page<Classification> findByOrderByNameAsc(Pageable pageable);
 }

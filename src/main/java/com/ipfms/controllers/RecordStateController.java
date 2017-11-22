@@ -8,7 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+/**
+ * Rest Controller
+ * <p>
+ * Handles RequestMapping for the /recordstates namespace
+ */
 @RestController
 @RequestMapping("/recordstates")
 public class RecordStateController {
@@ -19,6 +23,13 @@ public class RecordStateController {
         this.recordStateRepository = recordStateRepository;
     }
 
+    /**
+     * Returns a ResponseEntity containing all RecordState Objects as HATEOAS Resources.
+     * <p>
+     * Mapped to the the '/recordstates' route
+     *
+     * @return ResponseEntity containing all RecordStates, as Hateoas Resources
+     */
     @RequestMapping()
     public ResponseEntity<Resources<RecordState>> getStates(){
         System.out.println("In 'getStates'");
