@@ -7,15 +7,15 @@ import javax.persistence.*;
 public class CustomAttributeValue {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne()
-    @JoinColumn(name="AttrId")
+    @JoinColumn(name="AttrId", foreignKey= @ForeignKey(name="FK_CustomAttributeValues_Attributes"))
     private CustomAttribute attribute;
 
     @ManyToOne()
-    @JoinColumn(name="RecordId")
+    @JoinColumn(name="RecordId", foreignKey= @ForeignKey(name="FK_CustomAttributeValues_Records"))
     private Record record;
 
     private String value;

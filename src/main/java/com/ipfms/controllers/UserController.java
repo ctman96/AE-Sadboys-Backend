@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Rest Controller
- * <p>
- * Handles RequestMapping for the /users namespace
+ * Rest Controller -
+ * Handles RequestMapping for the '/users' namespace
  */
 @RestController
 @RequestMapping("/users")
@@ -51,7 +50,7 @@ public class UserController{
     public ResponseEntity<PagedResources<User>> showUsers(
             @RequestParam(value = "pageSize", required = false) Integer size,
             @RequestParam(value = "page", required = false) Integer page) {
-        System.out.println("In 'showRoles'");
+        System.out.println("In 'showUsers'");
         if(size == null){
             size = 10;
         }
@@ -66,7 +65,8 @@ public class UserController{
         PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
                 pageResult.getSize(), pageResult.getNumber(),
                 pageResult.getTotalElements(), pageResult.getTotalPages());
-        PagedResources<User> resources = new PagedResources<User>(pageResult.getContent(), metadata);
+        PagedResources<User> resources = new PagedResources<>(pageResult.getContent(), metadata);
+        System.out.println("Exiting 'showUsers'");
         return ResponseEntity.ok(resources);
     }
 

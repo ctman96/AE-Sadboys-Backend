@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 
 /**
- * Rest Controller
- * <p>
- * Handles RequestMapping for the /classifications namespace
+ * Rest Controller -
+ * Handles RequestMapping for the '/classifications' namespace
  */
 @RestController
 @RequestMapping("/classifications")

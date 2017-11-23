@@ -6,6 +6,7 @@ import com.ipfms.domain.model.Record;
 import com.ipfms.domain.model.SearchResult;
 import com.ipfms.domain.repository.ContainerRepository;
 import com.ipfms.domain.repository.RecordRepository;
+import org.hibernate.CacheMode;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -31,9 +32,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Rest Controller
- * <p>
- * Handles RequestMapping for the /search namespace
+ * Rest Controller -
+ * Handles RequestMapping for the '/search' namespace
  */
 @RestController
 @RequestMapping("/search")
@@ -100,8 +100,8 @@ public class SearchController {
         System.out.println("In 'search'");
 
         //Check for null parameters, set to default values
-        if(query == null){
-            query="";
+        if(query.equals("null")){
+            query=null;
         }else{
             try {
                 UriUtils.decode(query, "UTF-8");
@@ -129,13 +129,20 @@ public class SearchController {
 
         List<SearchResult> results = new ArrayList<>();
 
-        if(quickSearch && (query != null)){
-            results.addAll(quickSearch(query));
-        }else{
+        if(quickSearch){
+            if (query != null) {
+                results.addAll(quickSearch(query));
+            }
+        }
+        else if (query != null) {
             results.addAll(
                     fullSearch(query, includeRecords, includeContainers, classification,
                             createdAt, updatedAt, closedAt, location, schedule, state, type)
             );
+        }
+        else {
+            results.addAll(getAllResults(includeRecords, includeContainers, classification,
+                    createdAt, updatedAt, closedAt, location, schedule, state, type));
         }
 
         Pageable pageable = new PageRequest(page, size);
@@ -174,6 +181,58 @@ public class SearchController {
         return results;
     }
 
+    private List<SearchResult> getAllResults(Boolean includeRecords, Boolean includeContainers, String  classification,
+                                             Date createdAt, Date updatedAt, Date closedAt,
+                                             String location, String schedule, String state, String type){
+        List<SearchResult> results = new ArrayList<>();
+
+        EntityManager em = entityManagerFactory.createEntityManager();
+        FullTextEntityManager fullTextEntityManager =
+                org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
+        em.getTransaction().begin();
+
+        if(includeRecords) {
+            QueryBuilder qbr = fullTextEntityManager.getSearchFactory()
+                    .buildQueryBuilder().forEntity(Record.class).get();
+
+            org.apache.lucene.search.Query luceneQuery = qbr
+                    .all()
+                    .createQuery();
+
+            javax.persistence.Query jpaQueryR =
+                    fullTextEntityManager.createFullTextQuery(luceneQuery, Record.class);
+
+            List<Record> resultR = jpaQueryR.getResultList();
+
+            //Filter and add to full results
+            results.addAll(filterRecords(resultR, classification,
+                    createdAt, updatedAt, closedAt,
+                    location, schedule, state, type
+            ));
+        }
+
+        if(includeContainers) {
+            QueryBuilder qbc = fullTextEntityManager.getSearchFactory()
+                    .buildQueryBuilder().forEntity(Container.class).get();
+
+            org.apache.lucene.search.Query luceneQuery = qbc
+                    .all()
+                    .createQuery();
+
+            javax.persistence.Query jpaQueryC =
+                    fullTextEntityManager.createFullTextQuery(luceneQuery, Container.class);
+
+            List<Container> resultC = jpaQueryC.getResultList();
+
+            //Filter and add to full results
+            results.addAll(
+                    filterContainers( resultC, createdAt, updatedAt)
+            );
+        }
+
+        return results;
+    }
+
     private List<SearchResult> fullSearch(String query, Boolean includeRecords, Boolean includeContainers,
                                                       String classification, Date createdAt, Date updatedAt, Date closedAt,
                                                       String location, String schedule, String state, String type){
@@ -192,7 +251,7 @@ public class SearchController {
 
             org.apache.lucene.search.Query luceneQueryR = qbr
                     .keyword()
-                    .onFields("number", "title", "consignmentCode")
+                    .onFields("number", "title", "consignmentCode", "notes.text")
                     .matching(query)
                     .createQuery();
 
@@ -218,7 +277,7 @@ public class SearchController {
 
             org.apache.lucene.search.Query luceneQueryC = qbc
                     .keyword()
-                    .onFields("number", "title", "consignmentCode")
+                    .onFields("number", "title", "consignmentCode", "notes.text")
                     .matching(query)
                     .createQuery();
 
@@ -301,7 +360,10 @@ public class SearchController {
     /**
      * Reloads the search index.
      * Warning: The search index will be unavailable for the duration of the process
-     * Should take less than 5 minutes
+     * Should take approximately 1.5 hours with the given Data (RecordR-Data.sql)
+     *
+     * Note: Before adding Notes to the index, was <5 minutes. Needing to join tables slows
+     * it down significantly
      */
     @RequestMapping("/reload-index")
     public void reload(){
@@ -312,9 +374,10 @@ public class SearchController {
             fullTextEntityManager
                     .createIndexer(Record.class, Container.class)
                     .typesToIndexInParallel( 2 )
-                    .batchSizeToLoadObjects( 25 )
+                    .batchSizeToLoadObjects( 50 )
                     .threadsToLoadObjects( 12 )
                     .idFetchSize( 150 )
+                    .cacheMode(CacheMode.NORMAL)
                     .startAndWait();
         } catch (InterruptedException e) {
             // Exception handling

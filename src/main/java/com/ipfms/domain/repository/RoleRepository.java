@@ -7,6 +7,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Spring Data repository managing RoleRepository CRUD
+ */
 @Component
 @Repository
 public interface RoleRepository extends PagingAndSortingRepository<Role, Integer> {

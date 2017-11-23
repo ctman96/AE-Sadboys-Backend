@@ -11,13 +11,13 @@ import javax.persistence.*;
 public class RecordType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String numberPattern;
 
     @ManyToOne()
-    @JoinColumn(name="DefaultScheduleId")
+    @JoinColumn(name="DefaultScheduleId", foreignKey= @ForeignKey(name="FK_RecordTypes_RetentionSchedules"))
     private RetentionSchedule defaultSchedule;
 
     public RecordType() {

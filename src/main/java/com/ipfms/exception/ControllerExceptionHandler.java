@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * Spring Controller Exception Handler
+ */
 @ControllerAdvice
 public class ControllerExceptionHandler {
     private static final Logger LOG = Logger.getLogger(ControllerExceptionHandler.class.getName());

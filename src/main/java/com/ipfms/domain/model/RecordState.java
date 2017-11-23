@@ -10,12 +10,12 @@ import java.util.Set;
 public class RecordState {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
 
     @JsonIgnore
-    @OneToMany(targetEntity=Record.class, mappedBy="state", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity=Record.class, mappedBy="state")
     private Set<Record> records;
 
     public RecordState(){

@@ -15,11 +15,8 @@ import java.util.Set;
 @Entity
 @Indexed
 @Table(name = "containers")
-public class Container {
+public class Container extends Noted{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
 
     @Field(index=Index.YES, analyze= Analyze.YES, store= Store.NO)
     private String number;
@@ -34,7 +31,7 @@ public class Container {
     private Date updatedAt;
 
     @JsonIgnore
-    @OneToMany(targetEntity=Record.class, mappedBy="container", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity=Record.class, mappedBy="container")
     private Set<Record> records;
 
     public Container() {
@@ -49,13 +46,6 @@ public class Container {
         this.updatedAt = updatedAt;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getNumber() {
         return number;

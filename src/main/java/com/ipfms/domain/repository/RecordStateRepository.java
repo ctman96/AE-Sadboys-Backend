@@ -5,6 +5,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Spring Data repository managing RecordState CRUD
+ */
 @Component
 @Repository
 public interface RecordStateRepository extends CrudRepository<RecordState, Integer>{

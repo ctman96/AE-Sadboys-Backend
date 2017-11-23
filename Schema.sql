@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `classhierarchy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `classhierarchy` (
-  `Id` INT(11) NOT NULL,
+  `Id` INT(11) NOT NULL AUTO_INCREMENT,
   `ParentId` INT(11) NOT NULL,
   `Rel` INT(11) NOT NULL,
   `ChildId` INT(11) NOT NULL,
@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS `classifications`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `classifications` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `KeyWord` char(1) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'F',
   `UpdatedAt` datetime(6) NOT NULL,
@@ -71,7 +71,7 @@ DROP TABLE IF EXISTS `containers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `containers` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Number` varchar(30) CHARACTER SET utf8mb4 NOT NULL,
   `Title` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   `ConsignmentCode` varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
@@ -89,7 +89,7 @@ DROP TABLE IF EXISTS `customattributelookups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `customattributelookups` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `SetId` int(11) NOT NULL,
   `Name` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`Id`)
@@ -104,7 +104,7 @@ DROP TABLE IF EXISTS `customattributes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `customattributes` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
   `LookupId` int(11) DEFAULT NULL,
   KEY `Ffk_customattributeslookup` (`LookupId`),
@@ -125,7 +125,7 @@ DROP TABLE IF EXISTS `customattributevalues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `customattributevalues` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `AttrId` int(11) NOT NULL,
   `RecordId` int(11) NOT NULL,
   `Value` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
@@ -166,7 +166,7 @@ DROP TABLE IF EXISTS `locations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `locations` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `Code` char(10) CHARACTER SET utf8mb4 NOT NULL,
   `Locked` CHAR(1) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'F',
@@ -240,7 +240,7 @@ DROP TABLE IF EXISTS `records`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `records` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Number` varchar(30) CHARACTER SET utf8mb4 NOT NULL,
   `Title` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   `ScheduleId` int(11) DEFAULT NULL,
@@ -294,7 +294,7 @@ DROP TABLE IF EXISTS `recordstates`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `recordstates` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `AK_RecordStates_Name` (`Name`)
@@ -309,7 +309,7 @@ DROP TABLE IF EXISTS `recordtypes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `recordtypes` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
   `NumberPattern` varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
   `DefaultScheduleId` int(11) DEFAULT NULL,
@@ -331,7 +331,7 @@ DROP TABLE IF EXISTS `retentionschedules`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `retentionschedules` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(200) CHARACTER SET utf8mb4 NOT NULL,
   `Code` varchar(30) CHARACTER SET utf8mb4 NOT NULL,
   `Years` int(11) NOT NULL DEFAULT '0',
@@ -413,7 +413,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `UserId` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
   `FirstName` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `LastName` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
