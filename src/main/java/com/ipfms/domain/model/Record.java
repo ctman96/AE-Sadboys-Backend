@@ -18,11 +18,7 @@ import java.util.Set;
 @Entity
 @Indexed
 @Table(name = "records")
-public class Record {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Record extends Noted{
 
     @Field(index= Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String number;
@@ -65,7 +61,7 @@ public class Record {
     private Set<Classification> classifications;
 
     @JsonIgnore
-    @OneToMany(targetEntity=CustomAttributeValue.class, mappedBy="record", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity=CustomAttributeValue.class, mappedBy="record")
     private Set<CustomAttributeValue> customAttributeValues;
 
     public Record() {
@@ -84,14 +80,6 @@ public class Record {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.closedAt = closedAt;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getNumber() {
