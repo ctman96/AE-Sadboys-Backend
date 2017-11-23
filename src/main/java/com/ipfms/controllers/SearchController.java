@@ -6,6 +6,7 @@ import com.ipfms.domain.model.Record;
 import com.ipfms.domain.model.SearchResult;
 import com.ipfms.domain.repository.ContainerRepository;
 import com.ipfms.domain.repository.RecordRepository;
+import org.hibernate.CacheMode;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -250,7 +251,7 @@ public class SearchController {
 
             org.apache.lucene.search.Query luceneQueryR = qbr
                     .keyword()
-                    .onFields("number", "title", "consignmentCode")
+                    .onFields("number", "title", "consignmentCode", "notes.text")
                     .matching(query)
                     .createQuery();
 
@@ -276,7 +277,7 @@ public class SearchController {
 
             org.apache.lucene.search.Query luceneQueryC = qbc
                     .keyword()
-                    .onFields("number", "title", "consignmentCode")
+                    .onFields("number", "title", "consignmentCode", "notes.text")
                     .matching(query)
                     .createQuery();
 
@@ -359,7 +360,10 @@ public class SearchController {
     /**
      * Reloads the search index.
      * Warning: The search index will be unavailable for the duration of the process
-     * Should take less than 5 minutes
+     * Should take approximately 1.5 hours with the given Data (RecordR-Data.sql)
+     *
+     * Note: Before adding Notes to the index, was <5 minutes. Needing to join tables slows
+     * it down significantly
      */
     @RequestMapping("/reload-index")
     public void reload(){
@@ -370,9 +374,10 @@ public class SearchController {
             fullTextEntityManager
                     .createIndexer(Record.class, Container.class)
                     .typesToIndexInParallel( 2 )
-                    .batchSizeToLoadObjects( 25 )
+                    .batchSizeToLoadObjects( 50 )
                     .threadsToLoadObjects( 12 )
                     .idFetchSize( 150 )
+                    .cacheMode(CacheMode.NORMAL)
                     .startAndWait();
         } catch (InterruptedException e) {
             // Exception handling

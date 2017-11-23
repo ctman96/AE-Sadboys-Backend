@@ -1,5 +1,7 @@
 package com.ipfms.domain.model;
 
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ public abstract class Noted {
     @Id
     private Integer id;
 
+    @IndexedEmbedded
     @OneToMany(mappedBy="noted", fetch=FetchType.LAZY)
     private Set<Note> notes;
 

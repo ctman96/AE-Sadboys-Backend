@@ -2,6 +2,8 @@ package com.ipfms.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Formula;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 
@@ -16,11 +18,13 @@ public class Note{
     @Id
     private Integer chunk;
 
+    @Field(index= Index.YES, analyze= Analyze.YES, store= Store.NO)
     private String text;
 
     @Formula("(SELECT nt.Name FROM notetables nt WHERE nt.Id = tableId)")
     private String name;
 
+    @ContainedIn
     @ManyToOne(targetEntity = Noted.class)
     @JoinColumn(name="rowId", insertable = false, updatable = false)
     @JsonIgnore
