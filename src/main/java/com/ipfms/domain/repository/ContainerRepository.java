@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,4 +19,5 @@ public interface ContainerRepository extends CrudRepository<Container, Integer>{
     Container findById(Integer id);
     List<Container> findByNumberOrTitleOrConsignmentCode(String number, String title, String consignmentCode);
     Page<Container> findAll(Pageable pageable);
+    List<Container> findAllByCreatedAtAndUpdatedAt(Date createdAt, Date updatedAt);
 }

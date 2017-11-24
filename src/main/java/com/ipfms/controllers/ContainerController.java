@@ -1,7 +1,9 @@
 package com.ipfms.controllers;
 
 import com.ipfms.assembler.ContainerResourceAssembler;
+import com.ipfms.assembler.RecordResourceAssembler;
 import com.ipfms.domain.model.Container;
+import com.ipfms.domain.model.Record;
 import com.ipfms.domain.repository.ContainerRepository;
 import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Rest Controller -
  * Handles RequestMapping for the '/containers' namespace
@@ -24,11 +29,15 @@ public class ContainerController{
 
     private final ContainerRepository containerRepository;
     private final ContainerResourceAssembler containerResourceAssembler;
+    private final RecordResourceAssembler recordResourceAssembler;
 
     @Autowired
-    public ContainerController(ContainerResourceAssembler resourceAssembler, ContainerRepository repository){
+    public ContainerController(ContainerResourceAssembler resourceAssembler,
+                               ContainerRepository repository,
+                               RecordResourceAssembler recordResourceAssembler){
         this.containerRepository = repository;
         this.containerResourceAssembler = resourceAssembler;
+        this.recordResourceAssembler = recordResourceAssembler;
     }
 
     /**
@@ -78,13 +87,24 @@ public class ContainerController{
      * @return      Response Entity containing the corresponding Container, as a HATEOAS Resource
      */
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
-    ResponseEntity<Resource<Container>> getContainer(@PathVariable("id") Integer id){
+    public ResponseEntity<Resource<Container>> getContainer(@PathVariable("id") Integer id){
         Container c = containerRepository.findById(id);
         if (c == null) {
             throw new EntityNotFoundException("Container not found - id: " + id);
         }
         Resource<Container> resource = containerResourceAssembler.toResource(c);
         return ResponseEntity.ok(resource);
+    }
+
+    @RequestMapping(value="/{id}/records", method = RequestMethod.GET)
+    public ResponseEntity<List<Resource<Record>>> getContainerRecords(@PathVariable("id") Integer id){
+        Container c = containerRepository.findById(id);
+        if (c == null) {
+            throw new EntityNotFoundException("Container not found - id: " + id);
+        }
+        List<Record> records = new ArrayList<>(c.getRecords());
+        List<Resource<Record>> resources = recordResourceAssembler.toResources(records);
+        return ResponseEntity.ok(resources);
     }
 
     /**

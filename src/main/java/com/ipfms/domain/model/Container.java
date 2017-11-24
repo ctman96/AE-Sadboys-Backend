@@ -86,4 +86,9 @@ public class Container extends Noted{
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    @JsonIgnore
+    public Set<Record> getRecords() {
+        return records;
+    }
 }

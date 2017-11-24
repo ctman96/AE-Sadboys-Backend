@@ -1,11 +1,7 @@
 package com.ipfms.controllers;
 
-import com.ipfms.domain.model.Classification;
-import com.ipfms.domain.model.Container;
-import com.ipfms.domain.model.Record;
-import com.ipfms.domain.model.SearchResult;
-import com.ipfms.domain.repository.ContainerRepository;
-import com.ipfms.domain.repository.RecordRepository;
+import com.ipfms.domain.model.*;
+import com.ipfms.domain.repository.*;
 import org.hibernate.CacheMode;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
@@ -41,12 +37,29 @@ public class SearchController {
     private final EntityManagerFactory entityManagerFactory;
     private final ContainerRepository containerRepository;
     private final RecordRepository recordRepository;
+    private final ClassificationRepository classificationRepository;
+    private final LocationRepository locationRepository;
+    private final RetentionScheduleRepository retentionScheduleRepository;
+    private final RecordStateRepository recordStateRepository;
+    private final RecordTypeRepository recordTypeRepository;
 
     @Autowired
-    public SearchController(EntityManagerFactory entityManagerFactory, ContainerRepository containerRepository, RecordRepository recordRepository) {
+    public SearchController(EntityManagerFactory entityManagerFactory,
+                            ContainerRepository containerRepository,
+                            RecordRepository recordRepository,
+                            ClassificationRepository classificationRepository,
+                            LocationRepository locationRepository,
+                            RetentionScheduleRepository retentionScheduleRepository,
+                            RecordStateRepository recordStateRepository,
+                            RecordTypeRepository recordTypeRepository) {
         this.entityManagerFactory = entityManagerFactory;
         this.containerRepository = containerRepository;
         this.recordRepository = recordRepository;
+        this.classificationRepository = classificationRepository;
+        this.locationRepository = locationRepository;
+        this.retentionScheduleRepository = retentionScheduleRepository;
+        this.recordStateRepository = recordStateRepository;
+        this.recordTypeRepository = recordTypeRepository;
     }
 
     /**
@@ -62,14 +75,14 @@ public class SearchController {
      * @param page              the page number, for the given size (optional, default 0)
      * @param includeRecords    whether or not to include Records in the SearchResults (optional, default true)
      * @param includeContainers whether or not to include Containers in the Search Results (optional, default true)
-     * @param classification    the classification value to use to filter Records (optional, default null)
+     * @param classification    the classification Id to use to filter Records (optional, default null)
      * @param createdAt         the createdAt date value used to filter Records and Containers (optional, default null)
      * @param updatedAt         the updatedAt date value used to filter Records and Containers (optional, default null)
      * @param closedAt          the closedAt date value used to filter Records (optional, default null)
-     * @param location          the location value used to filter Records (optional, default null)
-     * @param schedule          the schedule value used to filter Records (optional, default null)
-     * @param state             the state value used to filter Records (optional, default null)
-     * @param type              the type value used to filter Records (optional, default null)
+     * @param location          the location Id used to filter Records (optional, default null)
+     * @param schedule          the schedule Id used to filter Records (optional, default null)
+     * @param state             the state Id used to filter Records (optional, default null)
+     * @param type              the type Id used to filter Records (optional, default null)
      * @return                  Response Entity containing a page of HATEOAS PagedResources of SearchResult objects
      */
     @RequestMapping()
@@ -88,14 +101,14 @@ public class SearchController {
             @RequestParam(value="containers", required= false) Boolean includeContainers,
 
             //Filters
-            @RequestParam(value="classification", required=false) String classification,
+            @RequestParam(value="classification", required=false) Integer classification,
             @RequestParam(value="created", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date createdAt,
             @RequestParam(value="updated", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date updatedAt,
             @RequestParam(value="closed", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date closedAt,
-            @RequestParam(value="location", required=false) String location,
-            @RequestParam(value="schedule", required=false) String schedule,
-            @RequestParam(value="state", required=false) String state,
-            @RequestParam(value="type", required=false) String type){
+            @RequestParam(value="location", required=false) Integer location,
+            @RequestParam(value="schedule", required=false) Integer schedule,
+            @RequestParam(value="state", required=false) Integer state,
+            @RequestParam(value="type", required=false) Integer type){
 
         System.out.println("In 'search'");
 
@@ -181,61 +194,47 @@ public class SearchController {
         return results;
     }
 
-    private List<SearchResult> getAllResults(Boolean includeRecords, Boolean includeContainers, String  classification,
+    private List<SearchResult> getAllResults(Boolean includeRecords, Boolean includeContainers, Integer  classification,
                                              Date createdAt, Date updatedAt, Date closedAt,
-                                             String location, String schedule, String state, String type){
+                                             Integer location, Integer schedule, Integer state, Integer type){
         List<SearchResult> results = new ArrayList<>();
 
-        EntityManager em = entityManagerFactory.createEntityManager();
-        FullTextEntityManager fullTextEntityManager =
-                org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
-        em.getTransaction().begin();
+        Classification c = classificationRepository.findById(classification);
+        Location l = locationRepository.findById(location);
+        RetentionSchedule sch = retentionScheduleRepository.findById(schedule);
+        RecordState st = recordStateRepository.findById(state);
+        RecordType t = recordTypeRepository.findById(type);
+
+
 
         if(includeRecords) {
-            QueryBuilder qbr = fullTextEntityManager.getSearchFactory()
-                    .buildQueryBuilder().forEntity(Record.class).get();
+            List<Record> resultR = recordRepository
+                    .filteredFind(
+                            c, createdAt, updatedAt, closedAt, l, sch, st, t
+                    );
 
-            org.apache.lucene.search.Query luceneQuery = qbr
-                    .all()
-                    .createQuery();
-
-            javax.persistence.Query jpaQueryR =
-                    fullTextEntityManager.createFullTextQuery(luceneQuery, Record.class);
-
-            List<Record> resultR = jpaQueryR.getResultList();
-
-            //Filter and add to full results
-            results.addAll(filterRecords(resultR, classification,
-                    createdAt, updatedAt, closedAt,
-                    location, schedule, state, type
-            ));
+            for (Record r : resultR){
+                results.add(new SearchResult(r));
+            }
         }
 
-        if(includeContainers) {
-            QueryBuilder qbc = fullTextEntityManager.getSearchFactory()
-                    .buildQueryBuilder().forEntity(Container.class).get();
+        //Build and execute Container Query
+        if(includeContainers && ((classification == null) && (location == null) && (schedule == null) && (state == null) && (type == null))) {
 
-            org.apache.lucene.search.Query luceneQuery = qbc
-                    .all()
-                    .createQuery();
+            List<Container> resultC = containerRepository
+                    .findAllByCreatedAtAndUpdatedAt(createdAt, updatedAt);
 
-            javax.persistence.Query jpaQueryC =
-                    fullTextEntityManager.createFullTextQuery(luceneQuery, Container.class);
-
-            List<Container> resultC = jpaQueryC.getResultList();
-
-            //Filter and add to full results
-            results.addAll(
-                    filterContainers( resultC, createdAt, updatedAt)
-            );
+            for (Container con : resultC){
+                results.add(new SearchResult(con));
+            }
         }
 
         return results;
     }
 
     private List<SearchResult> fullSearch(String query, Boolean includeRecords, Boolean includeContainers,
-                                                      String classification, Date createdAt, Date updatedAt, Date closedAt,
-                                                      String location, String schedule, String state, String type){
+                                                      Integer classification, Date createdAt, Date updatedAt, Date closedAt,
+                                                      Integer location, Integer schedule, Integer state, Integer type){
 
         List<SearchResult> results = new ArrayList<>();
 
@@ -295,14 +294,14 @@ public class SearchController {
     }
 
     private List<SearchResult> filterRecords(List<Record> records,
-                                       String classification,
-                                       Date createdAt,
-                                       Date updatedAt,
-                                       Date closedAt,
-                                       String location,
-                                       String schedule,
-                                       String state,
-                                       String type){
+                                             Integer classification,
+                                             Date createdAt,
+                                             Date updatedAt,
+                                             Date closedAt,
+                                             Integer location,
+                                             Integer schedule,
+                                             Integer state,
+                                             Integer type){
         List<SearchResult> results = new ArrayList<>();
         for (Record r : records) {
             Boolean doAdd = true;
@@ -310,12 +309,10 @@ public class SearchController {
             doAdd = doAdd && ((createdAt == null) || compareDates(r.getCreatedAt(), createdAt));
             doAdd = doAdd && ((updatedAt == null) || compareDates(r.getUpdatedAt(), updatedAt));
             doAdd = doAdd && ((closedAt == null) || compareDates(r.getClosedAt(), closedAt));
-            doAdd = doAdd && ((location == null) || (
-                    r.getLocation().getName().equals(location) || r.getLocation().getCode().equals(location) || r.getLocation().getId().toString().equals(location)));
-            doAdd = doAdd && ((schedule == null)
-                    || ( r.getSchedule().getName().equals(schedule) || r.getSchedule().getCode().equals(schedule) || r.getSchedule().getId().toString().equals(schedule) ));
-            doAdd = doAdd && ((state == null) || (r.getState().getName().equals(state)) || (r.getState().getId().toString().equals(state)));
-            doAdd = doAdd && ((type == null) || (r.getType().getName().equals(type)) || (r.getType().getId().toString().equals(type)));
+            doAdd = doAdd && ((location == null) || r.getLocation().getId().equals(location));
+            doAdd = doAdd && ((schedule == null) || r.getSchedule().getId().equals(schedule));
+            doAdd = doAdd && ((state == null) || r.getState().getId().equals(state));
+            doAdd = doAdd && ((type == null) || r.getType().getId().equals(type));
             if (doAdd) {
                 results.add(new SearchResult(r));
             }
@@ -326,9 +323,9 @@ public class SearchController {
     private List<SearchResult> filterContainers(List<Container> containers, Date createdAt, Date updatedAt){
         List<SearchResult> results = new ArrayList<>();
         for(Container c : containers){
-            Boolean doAdd = true;
-            doAdd = doAdd && ((createdAt == null) || compareDates(c.getCreatedAt(), createdAt));
-            doAdd = doAdd && ((updatedAt == null) ||compareDates(c.getUpdatedAt(), updatedAt));
+            Boolean doAdd = (
+                    ((createdAt == null) || compareDates(c.getCreatedAt(), createdAt))
+                    && ((updatedAt == null) ||compareDates(c.getUpdatedAt(), updatedAt)));
             //TODO: Do containers get filtered by anything else, depending on subrecords?
             if(doAdd) {
                 results.add(new SearchResult(c));
@@ -338,7 +335,7 @@ public class SearchController {
     }
 
     //Classification Filter Helper
-    private Boolean checkClassifications(Record record, String classificationVal){
+    private Boolean checkClassifications(Record record, Integer classificationVal){
 
                 if (record.getClassifications().isEmpty()){
                     return false;
@@ -346,7 +343,7 @@ public class SearchController {
 
                 Boolean check = true;
                 for (Classification c : record.getClassifications()){
-                    check = check && c.getName().equals(classificationVal);
+                    check = check && c.getId().equals(classificationVal);
                 }
                 return check;
     }
