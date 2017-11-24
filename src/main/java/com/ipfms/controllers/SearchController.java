@@ -346,7 +346,7 @@ public class SearchController {
 
                 Boolean check = true;
                 for (Classification c : record.getClassifications()){
-                    check = check && c.getName().equals(classificationVal);
+                    check = check && (c.getName().equals(classificationVal) || c.getId().equals(classificationVal));
                 }
                 return check;
     }
