@@ -1,6 +1,8 @@
 package com.ipfms.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.ipfms.domain.View;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -12,8 +14,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String userId;
+
     private String firstName;
+
     private String lastName;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
@@ -38,6 +43,7 @@ public class User {
         this.lastName = lastName;
     }
 
+    @JsonView(View.Summary.class)
     public Integer getId() {
         return id;
     }
@@ -46,6 +52,7 @@ public class User {
         this.id = id;
     }
 
+    @JsonView(View.Summary.class)
     public String getUserId() {
         return userId;
     }
@@ -54,6 +61,7 @@ public class User {
         this.userId = userId;
     }
 
+    @JsonView(View.Summary.class)
     public String getFirstName() {
         return firstName;
     }
@@ -62,6 +70,7 @@ public class User {
         this.firstName = firstName;
     }
 
+    @JsonView(View.Summary.class)
     public String getLastName() {
         return lastName;
     }

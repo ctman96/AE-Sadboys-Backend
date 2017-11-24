@@ -1,6 +1,9 @@
 package com.ipfms.controllers;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.ipfms.assembler.UserResourceAssembler;
+import com.ipfms.domain.View;
 import com.ipfms.domain.model.User;
 import com.ipfms.domain.repository.UserRepository;
 import com.ipfms.exception.EntityNotFoundException;
@@ -10,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +72,27 @@ public class UserController{
         PagedResources<User> resources = new PagedResources<>(pageResult.getContent(), metadata);
         System.out.println("Exiting 'showUsers'");
         return ResponseEntity.ok(resources);
+    }
+
+    /**
+     * Returns a ResponseEntity containing all User Objects
+     * <p>
+     * Mapped to the the '/users/all' route
+     *
+     * @return ResponseEntity containing all Users
+     */
+    @JsonView(View.Summary.class)
+    @RequestMapping("/all")
+    public ResponseEntity<Iterable<User>> showAllUsers() {
+        System.out.println("In 'showAllUsers'");
+        Iterable<User> users = userRepository.findAll();
+        if (users == null) {
+            throw new EntityNotFoundException("No Users found");
+        }
+        //Resources<User> resources = new Resources<>(users);
+        //Doesn't work with JsonView
+        System.out.println("Exiting 'showAllUsers'");
+        return ResponseEntity.ok(users);
     }
 
     /**
