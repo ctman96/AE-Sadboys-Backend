@@ -2,6 +2,8 @@ package com.ipfms.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.ipfms.domain.View;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -41,18 +43,22 @@ public class Classification {
         this.updatedAt = updatedAt;
     }
 
+    @JsonView(View.Summary.class)
     public Integer getId() {
         return id;
     }
 
+    @JsonView(View.Summary.class)
     public String getName() {
         return name;
     }
 
+    @JsonView(View.Summary.class)
     public String getKeyword() {
         return keyword;
     }
 
+    @JsonView(View.Summary.class)
     public Date getUpdatedAt() {
         return updatedAt;
     }

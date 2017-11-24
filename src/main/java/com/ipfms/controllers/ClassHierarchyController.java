@@ -108,11 +108,21 @@ public class ClassHierarchyController{
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> createClassHierarchy(@RequestBody ClassHierarchy classHierarchy) {
         System.out.println("In 'createClassHierarchy'");
+
         Integer parentId = classHierarchy.getParent().getId();
         Integer childId = classHierarchy.getChild().getId();
-        Integer rel = classHierarchy.getRel();
-        classHierarchy.setParent(classificationRepository.findById(parentId));
-        classHierarchy.setChild(classificationRepository.findById(childId));
+        String parentName = classHierarchy.getParent().getName();
+        String childName = classHierarchy.getChild().getName();
+        if (parentId != null && childId != null){
+            classHierarchy.setParent(classificationRepository.findById(parentId));
+            classHierarchy.setChild(classificationRepository.findById(childId));
+        }
+        else if (parentName != null && childName != null){
+            classHierarchy.setParent(classificationRepository.findByName(parentName));
+            classHierarchy.setChild(classificationRepository.findByName(childName));
+        }
+
+
         classHierarchyRepository.save(classHierarchy);
         System.out.println("Exiting 'createClassHierarchy'");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

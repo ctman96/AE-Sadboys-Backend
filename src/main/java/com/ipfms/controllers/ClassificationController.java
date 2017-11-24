@@ -1,6 +1,8 @@
 package com.ipfms.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.ipfms.assembler.ClassificationResourceAssembler;
+import com.ipfms.domain.View;
 import com.ipfms.domain.model.Classification;
 import com.ipfms.domain.repository.ClassificationRepository;
 import com.ipfms.exception.EntityNotFoundException;
@@ -70,6 +72,27 @@ public class ClassificationController{
         return ResponseEntity.ok(resources);
     }
 
+    /**
+     * Returns a ResponseEntity containing all Classification Objects
+     * <p>
+     * Mapped to the the '/classifications/all' route
+     *
+     * @return ResponseEntity containing all Classifications
+     */
+    @JsonView(View.Summary.class)
+    @RequestMapping("/all")
+    public ResponseEntity<Iterable<Classification>> showAllClassifications() {
+        System.out.println("In 'showAllClassifications'");
+        Iterable<Classification> classifications = classificationRepository.findAll();
+        if (classifications == null) {
+            throw new EntityNotFoundException("No Users found");
+        }
+        //Resources<Classification> resources = new Resources<>(classifications);
+        //Doesn't work with JsonView
+        System.out.println("Exiting 'showAllClassifications'");
+        return ResponseEntity.ok(classifications);
+    }
+
 
     /**
      * Returns a Response Entity containing a Classification object, as a HATEOAS Resource,
@@ -107,6 +130,9 @@ public class ClassificationController{
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<Void> createClassification(@RequestBody Classification classification) {
         System.out.println("In 'createClassification'");
+        if (classification.getKeyword() == null){
+            classification.setKeyword("F");
+        }
         classification.setUpdatedAt(new Date());
         classificationRepository.save(classification);
         System.out.println("Exiting 'createClassification'");
