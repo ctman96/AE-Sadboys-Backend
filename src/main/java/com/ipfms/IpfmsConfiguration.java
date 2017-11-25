@@ -33,6 +33,7 @@ public class IpfmsConfiguration {
             config.addAllowedOrigin(corsUrl);
         }
         config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedOrigin("http://104.236.142.244:8080");
 
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
