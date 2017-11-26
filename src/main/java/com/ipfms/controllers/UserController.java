@@ -59,7 +59,7 @@ public class UserController{
             size = 10;
         }
         if(page == null){
-            page = 1;
+            page = 0;
         }
         Pageable pageable = new PageRequest(page, size);
         Page<User> pageResult = userRepository.findByOrderByUserIdAsc(pageable);
