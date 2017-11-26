@@ -21,13 +21,13 @@ public class User {
 
     private String lastName;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name="userroles",
             joinColumns = @JoinColumn(name="UserId", referencedColumnName = "Id", foreignKey= @ForeignKey(name="FK_UserRoles_Users")),
             inverseJoinColumns = @JoinColumn(name="RoleId", referencedColumnName = "Id", foreignKey= @ForeignKey(name="FK_UserRoles_Roles")))
     private Set<Role> roles;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @ManyToMany( fetch=FetchType.LAZY)
     @JoinTable(name="userlocations",
             joinColumns = @JoinColumn(name="UserId", referencedColumnName = "Id", foreignKey= @ForeignKey(name="FK_UserLocations_Users")),
             inverseJoinColumns = @JoinColumn(name="LocationId", referencedColumnName = "Id", foreignKey= @ForeignKey(name="FK_UserLocations_Locations")))

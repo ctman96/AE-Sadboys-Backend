@@ -2,7 +2,9 @@ package com.ipfms.controllers;
 
 import com.ipfms.assembler.LocationResourceAssembler;
 import com.ipfms.domain.model.Location;
+import com.ipfms.domain.model.User;
 import com.ipfms.domain.repository.LocationRepository;
+import com.ipfms.domain.repository.UserRepository;
 import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Rest Controller -
  * Handles RequestMapping for the '/locations' namespace
@@ -25,11 +30,14 @@ public class LocationController{
 
     private final LocationRepository locationRepository;
     private final LocationResourceAssembler locationResourceAssembler;
+    private final UserRepository userRepository;
 
     @Autowired
-    public LocationController(LocationResourceAssembler resourceAssembler, LocationRepository repository){
+    public LocationController(LocationResourceAssembler resourceAssembler, LocationRepository repository,
+                              UserRepository userRepository){
         this.locationRepository = repository;
         this.locationResourceAssembler = resourceAssembler;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -121,8 +129,71 @@ public class LocationController{
      * @return a void ResponseEntity with a NO_CONTENT status
      */
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Void> createLocation(@RequestBody Location location) {
+    ResponseEntity<Void> saveLocation(@RequestBody Location location) {
+        Location l = null;
+        if(location.getId() != null){
+            l = locationRepository.findById(location.getId());
+        }
+        Set<User> requestUsers = location.getUsers();
+        location.setUsers(null);
+        Set<User> oldUsers = l.getUsers();
+
+        if(oldUsers == null){
+            oldUsers = new HashSet<>();
+        }
+        Set<User> newUsers = new HashSet<>();
+
+        if(requestUsers != null) {
+            for (User u : requestUsers) {
+                User user = null;
+                if (u.getId() != null) {
+                    user = userRepository.findById(u.getId());
+                } else if (u.getUserId() != null) {
+                    user = userRepository.findByUserId(u.getUserId());
+                } else {
+                    throw new EntityNotFoundException("No valid identifier provided for user");
+                }
+                if (user == null) {
+                    throw new EntityNotFoundException("User not found - id: " + u.getId());
+                }
+                newUsers.add(user);
+            }
+        }
+
+        System.out.println("New users: " + newUsers);
+        System.out.println("Old users: " + oldUsers);
+
+        Set<User> usersToAdd = new HashSet<>();
+        usersToAdd.addAll(newUsers);
+        Set<User> usersToRemove = new HashSet<>();
+        usersToRemove.addAll(oldUsers);
+        usersToRemove.removeAll(newUsers);
+
+        System.out.println("Users to Add: " + usersToAdd);
+        System.out.println("Users to Remove: " + usersToRemove);
+
+        newUsers = new HashSet<>();
+
+        if (usersToAdd != null) {
+            for (User u : usersToAdd){
+                Set<Location> userLocation = u.getLocations();
+                userLocation.add(l);
+                u.setLocations(userLocation);
+                newUsers.add(u);
+                userRepository.save(u);
+            }
+        }
+        if (usersToRemove != null){
+            for (User u : usersToRemove){
+                Set<Location> userLocations = u.getLocations();
+                userLocations.remove(l);
+                u.setLocations(userLocations);
+                userRepository.save(u);
+            }
+        }
+        location.setUsers(newUsers);
         locationRepository.save(location);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

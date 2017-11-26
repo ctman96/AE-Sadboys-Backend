@@ -2,7 +2,9 @@ package com.ipfms.controllers;
 
 import com.ipfms.assembler.RoleResourceAssembler;
 import com.ipfms.domain.model.Role;
+import com.ipfms.domain.model.User;
 import com.ipfms.domain.repository.RoleRepository;
+import com.ipfms.domain.repository.UserRepository;
 import com.ipfms.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * Rest Controller -
  * Handles RequestMapping for the '/roles' namespace
@@ -24,11 +32,13 @@ public class RoleController{
 
     private final RoleRepository roleRepository;
     private final RoleResourceAssembler roleResourceAssembler;
+    private final UserRepository userRepository;
 
     @Autowired
-    public RoleController(RoleResourceAssembler resourceAssembler, RoleRepository repository){
+    public RoleController(RoleResourceAssembler resourceAssembler, RoleRepository repository, UserRepository userRepository){
         this.roleRepository = repository;
         this.roleResourceAssembler = resourceAssembler;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -45,7 +55,7 @@ public class RoleController{
      * @return      the ResponseEntity containing the page of Role Hateoas Resources
      */
     @RequestMapping()
-    public ResponseEntity<PagedResources<Role>> showRoles(
+    ResponseEntity<PagedResources<Role>> showRoles(
             @RequestParam(value = "pageSize", required = false) Integer size,
             @RequestParam(value = "page", required = false) Integer page) {
         System.out.println("In 'showRoles'");
@@ -101,7 +111,63 @@ public class RoleController{
      * @return a void ResponseEntity with a NO_CONTENT status
      */
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Void> createRole(@RequestBody Role role) {
+    ResponseEntity<Void> saveRole(@RequestBody Role role) {
+        Role r = null;
+        if(role.getId() != null){
+            r = roleRepository.findById(role.getId());
+        }
+        Set<User> requestUsers = role.getUsers();
+        Set<User> oldUsers = r.getUsers();
+
+        if(oldUsers == null){
+            oldUsers = new HashSet<>();
+        }
+        Set<User> newUsers = new HashSet<>();
+
+        if(requestUsers != null) {
+            for (User u : requestUsers) {
+                User user = null;
+                if (u.getId() != null) {
+                    user = userRepository.findById(u.getId());
+                } else if (u.getUserId() != null) {
+                    user = userRepository.findByUserId(u.getUserId());
+                } else {
+                    throw new EntityNotFoundException("No valid identifier provided for user");
+                }
+                if (user == null) {
+                    throw new EntityNotFoundException("User not found - id: " + u.getId());
+                }
+                newUsers.add(user);
+            }
+        }
+
+        System.out.println("New users: " + newUsers);
+        System.out.println("Old users: " + oldUsers);
+
+        Set<User> usersToAdd = new HashSet<>();
+        usersToAdd.addAll(newUsers);
+        Set<User> usersToRemove = new HashSet<>();
+        usersToRemove.addAll(oldUsers);
+        usersToRemove.removeAll(newUsers);
+
+        System.out.println("Users to Add: " + usersToAdd);
+        System.out.println("Users to Remove: " + usersToRemove);
+
+        newUsers = new HashSet<>();
+
+        for (User u : usersToAdd){
+            Set<Role> userRoles = new HashSet<>();
+            userRoles.add(r);
+            u.setRoles(userRoles);
+            newUsers.add(u);
+            userRepository.save(u);
+        }
+
+        for (User u : usersToRemove){
+            u.setRoles(new HashSet<>());
+            userRepository.save(u);
+        }
+        role.setUsers(newUsers);
         roleRepository.save(role);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
