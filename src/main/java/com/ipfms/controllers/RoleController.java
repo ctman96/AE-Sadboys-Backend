@@ -117,57 +117,59 @@ public class RoleController{
             r = roleRepository.findById(role.getId());
         }
         Set<User> requestUsers = role.getUsers();
-        Set<User> oldUsers = r.getUsers();
+        if (r != null) {
+            Set<User> oldUsers = r.getUsers();
 
-        if(oldUsers == null){
-            oldUsers = new HashSet<>();
-        }
-        Set<User> newUsers = new HashSet<>();
-
-        if(requestUsers != null) {
-            for (User u : requestUsers) {
-                User user = null;
-                if (u.getId() != null) {
-                    user = userRepository.findById(u.getId());
-                } else if (u.getUserId() != null) {
-                    user = userRepository.findByUserId(u.getUserId());
-                } else {
-                    throw new EntityNotFoundException("No valid identifier provided for user");
-                }
-                if (user == null) {
-                    throw new EntityNotFoundException("User not found - id: " + u.getId());
-                }
-                newUsers.add(user);
+            if (oldUsers == null) {
+                oldUsers = new HashSet<>();
             }
+            Set<User> newUsers = new HashSet<>();
+
+            if (requestUsers != null) {
+                for (User u : requestUsers) {
+                    User user = null;
+                    if (u.getId() != null) {
+                        user = userRepository.findById(u.getId());
+                    } else if (u.getUserId() != null) {
+                        user = userRepository.findByUserId(u.getUserId());
+                    } else {
+                        throw new EntityNotFoundException("No valid identifier provided for user");
+                    }
+                    if (user == null) {
+                        throw new EntityNotFoundException("User not found - id: " + u.getId());
+                    }
+                    newUsers.add(user);
+                }
+            }
+
+            System.out.println("New users: " + newUsers);
+            System.out.println("Old users: " + oldUsers);
+
+            Set<User> usersToAdd = new HashSet<>();
+            usersToAdd.addAll(newUsers);
+            Set<User> usersToRemove = new HashSet<>();
+            usersToRemove.addAll(oldUsers);
+            usersToRemove.removeAll(newUsers);
+
+            System.out.println("Users to Add: " + usersToAdd);
+            System.out.println("Users to Remove: " + usersToRemove);
+
+            newUsers = new HashSet<>();
+
+            for (User u : usersToAdd) {
+                Set<Role> userRoles = new HashSet<>();
+                userRoles.add(r);
+                u.setRoles(userRoles);
+                newUsers.add(u);
+                userRepository.save(u);
+            }
+
+            for (User u : usersToRemove) {
+                u.setRoles(new HashSet<>());
+                userRepository.save(u);
+            }
+            role.setUsers(newUsers);
         }
-
-        System.out.println("New users: " + newUsers);
-        System.out.println("Old users: " + oldUsers);
-
-        Set<User> usersToAdd = new HashSet<>();
-        usersToAdd.addAll(newUsers);
-        Set<User> usersToRemove = new HashSet<>();
-        usersToRemove.addAll(oldUsers);
-        usersToRemove.removeAll(newUsers);
-
-        System.out.println("Users to Add: " + usersToAdd);
-        System.out.println("Users to Remove: " + usersToRemove);
-
-        newUsers = new HashSet<>();
-
-        for (User u : usersToAdd){
-            Set<Role> userRoles = new HashSet<>();
-            userRoles.add(r);
-            u.setRoles(userRoles);
-            newUsers.add(u);
-            userRepository.save(u);
-        }
-
-        for (User u : usersToRemove){
-            u.setRoles(new HashSet<>());
-            userRepository.save(u);
-        }
-        role.setUsers(newUsers);
         roleRepository.save(role);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

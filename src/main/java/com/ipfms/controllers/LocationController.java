@@ -135,63 +135,64 @@ public class LocationController{
             l = locationRepository.findById(location.getId());
         }
         Set<User> requestUsers = location.getUsers();
-        location.setUsers(null);
-        Set<User> oldUsers = l.getUsers();
+        if (l != null) {
+            Set<User> oldUsers = l.getUsers();
 
-        if(oldUsers == null){
-            oldUsers = new HashSet<>();
-        }
-        Set<User> newUsers = new HashSet<>();
+            if (oldUsers == null) {
+                oldUsers = new HashSet<>();
+            }
+            Set<User> newUsers = new HashSet<>();
 
-        if(requestUsers != null) {
-            for (User u : requestUsers) {
-                User user = null;
-                if (u.getId() != null) {
-                    user = userRepository.findById(u.getId());
-                } else if (u.getUserId() != null) {
-                    user = userRepository.findByUserId(u.getUserId());
-                } else {
-                    throw new EntityNotFoundException("No valid identifier provided for user");
+            if (requestUsers != null) {
+                for (User u : requestUsers) {
+                    User user = null;
+                    if (u.getId() != null) {
+                        user = userRepository.findById(u.getId());
+                    } else if (u.getUserId() != null) {
+                        user = userRepository.findByUserId(u.getUserId());
+                    } else {
+                        throw new EntityNotFoundException("No valid identifier provided for user");
+                    }
+                    if (user == null) {
+                        throw new EntityNotFoundException("User not found - id: " + u.getId());
+                    }
+                    newUsers.add(user);
                 }
-                if (user == null) {
-                    throw new EntityNotFoundException("User not found - id: " + u.getId());
+            }
+
+            System.out.println("New users: " + newUsers);
+            System.out.println("Old users: " + oldUsers);
+
+            Set<User> usersToAdd = new HashSet<>();
+            usersToAdd.addAll(newUsers);
+            Set<User> usersToRemove = new HashSet<>();
+            usersToRemove.addAll(oldUsers);
+            usersToRemove.removeAll(newUsers);
+
+            System.out.println("Users to Add: " + usersToAdd);
+            System.out.println("Users to Remove: " + usersToRemove);
+
+            newUsers = new HashSet<>();
+
+            if (usersToAdd != null) {
+                for (User u : usersToAdd) {
+                    Set<Location> userLocation = u.getLocations();
+                    userLocation.add(l);
+                    u.setLocations(userLocation);
+                    newUsers.add(u);
+                    userRepository.save(u);
                 }
-                newUsers.add(user);
             }
-        }
-
-        System.out.println("New users: " + newUsers);
-        System.out.println("Old users: " + oldUsers);
-
-        Set<User> usersToAdd = new HashSet<>();
-        usersToAdd.addAll(newUsers);
-        Set<User> usersToRemove = new HashSet<>();
-        usersToRemove.addAll(oldUsers);
-        usersToRemove.removeAll(newUsers);
-
-        System.out.println("Users to Add: " + usersToAdd);
-        System.out.println("Users to Remove: " + usersToRemove);
-
-        newUsers = new HashSet<>();
-
-        if (usersToAdd != null) {
-            for (User u : usersToAdd){
-                Set<Location> userLocation = u.getLocations();
-                userLocation.add(l);
-                u.setLocations(userLocation);
-                newUsers.add(u);
-                userRepository.save(u);
+            if (usersToRemove != null) {
+                for (User u : usersToRemove) {
+                    Set<Location> userLocations = u.getLocations();
+                    userLocations.remove(l);
+                    u.setLocations(userLocations);
+                    userRepository.save(u);
+                }
             }
+            location.setUsers(newUsers);
         }
-        if (usersToRemove != null){
-            for (User u : usersToRemove){
-                Set<Location> userLocations = u.getLocations();
-                userLocations.remove(l);
-                u.setLocations(userLocations);
-                userRepository.save(u);
-            }
-        }
-        location.setUsers(newUsers);
         locationRepository.save(location);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
