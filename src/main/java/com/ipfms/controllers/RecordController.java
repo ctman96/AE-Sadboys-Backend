@@ -63,7 +63,7 @@ public class RecordController{
         PagedResources.PageMetadata metadata = new PagedResources.PageMetadata(
                 pageResult.getSize(), pageResult.getNumber(),
                 pageResult.getTotalElements(), pageResult.getTotalPages());
-        PagedResources<Record> resources = new PagedResources<Record>(pageResult.getContent(), metadata);
+        PagedResources<Record> resources = new PagedResources<>(pageResult.getContent(), metadata);
         System.out.println("Exiting 'showRecords'");
         return ResponseEntity.ok(resources);
     }

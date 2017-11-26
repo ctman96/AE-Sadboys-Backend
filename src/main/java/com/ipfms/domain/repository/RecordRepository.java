@@ -24,18 +24,12 @@ public interface RecordRepository extends CrudRepository<Record, Integer>{
 
     @Query("SELECT r FROM Record r " +
             "WHERE (:classification IS NULL OR :classification MEMBER r.classifications) " +
-            "AND (:createdAt IS NULL OR  :createdAt = r.createdAt) " +
-            "AND (:updatedAt IS NULL OR :updatedAt = r.updatedAt) " +
-            "AND (:closedAt IS NULL OR :closedAt = r.closedAt) " +
             "AND (:location IS NULL OR :location = r.location) " +
             "AND (:schedule IS NULL OR :schedule = r.schedule) " +
             "AND (:state IS NULL OR :state = r.state) " +
             "AND (:type IS NULL OR :type = r.type)")
     List<Record> filteredFind(
             @Param("classification")Classification classification,
-            @Param("createdAt")Date createdAt,
-            @Param("updatedAt")Date updatedAt,
-            @Param("closedAt")Date closedAt,
             @Param("location")Location location,
             @Param("schedule")RetentionSchedule schedule,
             @Param("state")RecordState state,

@@ -76,9 +76,9 @@ public class SearchController {
      * @param includeRecords    whether or not to include Records in the SearchResults (optional, default true)
      * @param includeContainers whether or not to include Containers in the Search Results (optional, default true)
      * @param classification    the classification Id to use to filter Records (optional, default null)
-     * @param createdAt         the createdAt date value used to filter Records and Containers (optional, default null)
-     * @param updatedAt         the updatedAt date value used to filter Records and Containers (optional, default null)
-     * @param closedAt          the closedAt date value used to filter Records (optional, default null)
+     * @param createdAtUnix     the createdAt date value used to filter Records and Containers, unix stamp (optional, default null)
+     * @param updatedAtUnix     the updatedAt date value used to filter Records and Containers, unix stamp (optional, default null)
+     * @param closedAtUnix      the closedAt date value used to filter Records (optional, default null)
      * @param location          the location Id used to filter Records (optional, default null)
      * @param schedule          the schedule Id used to filter Records (optional, default null)
      * @param state             the state Id used to filter Records (optional, default null)
@@ -102,9 +102,9 @@ public class SearchController {
 
             //Filters
             @RequestParam(value="classification", required=false) Integer classification,
-            @RequestParam(value="created", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date createdAt,
-            @RequestParam(value="updated", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date updatedAt,
-            @RequestParam(value="closed", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date closedAt,
+            @RequestParam(value="created", required=false) Long createdAtUnix,
+            @RequestParam(value="updated", required=false) Long updatedAtUnix,
+            @RequestParam(value="closed", required=false) Long closedAtUnix,
             @RequestParam(value="location", required=false) Integer location,
             @RequestParam(value="schedule", required=false) Integer schedule,
             @RequestParam(value="state", required=false) Integer state,
@@ -113,7 +113,7 @@ public class SearchController {
         System.out.println("In 'search'");
 
         //Check for null parameters, set to default values
-        if(query.equals("null")){
+        if(query == null || query.equals("null")){
             query=null;
         }else{
             try {
@@ -138,6 +138,18 @@ public class SearchController {
         }
         if(includeContainers == null){
             includeContainers = true;
+        }
+        Date createdAt = null;
+        Date updatedAt = null;
+        Date closedAt = null;
+        if (createdAtUnix != null){
+            createdAt = new Date(createdAtUnix*1000L);
+        }
+        if (updatedAtUnix != null){
+            updatedAt = new Date(updatedAtUnix*1000L);
+        }
+        if (closedAtUnix != null){
+            closedAt = new Date(closedAtUnix*1000L);
         }
 
         List<SearchResult> results = new ArrayList<>();
@@ -174,6 +186,7 @@ public class SearchController {
     }
 
     private List<SearchResult> quickSearch(String query){
+        System.out.println("In 'quickSearch'");
 
         List<SearchResult> results = new ArrayList<>();
 
@@ -191,12 +204,15 @@ public class SearchController {
             results.add(new SearchResult(c));
         }
 
+        System.out.println("Exiting 'quickSearch'");
         return results;
     }
 
     private List<SearchResult> getAllResults(Boolean includeRecords, Boolean includeContainers, Integer  classification,
                                              Date createdAt, Date updatedAt, Date closedAt,
                                              Integer location, Integer schedule, Integer state, Integer type){
+        System.out.println("In 'getAllResults'");
+
         List<SearchResult> results = new ArrayList<>();
 
         Classification c = classificationRepository.findById(classification);
@@ -210,32 +226,41 @@ public class SearchController {
         if(includeRecords) {
             List<Record> resultR = recordRepository
                     .filteredFind(
-                            c, createdAt, updatedAt, closedAt, l, sch, st, t
+                            c, l, sch, st, t
                     );
 
             for (Record r : resultR){
-                results.add(new SearchResult(r));
+                Boolean createfilter = ((createdAt == null) || compareDates(createdAt, r.getCreatedAt()));
+                Boolean updatefilter = ((updatedAt == null) || compareDates(updatedAt, r.getUpdatedAt()));
+                Boolean closedfilter = ((closedAt == null) || compareDates(closedAt, r.getClosedAt()));
+                if (createfilter && updatefilter && closedfilter) {
+                    results.add(new SearchResult(r));
+                }
             }
         }
 
         //Build and execute Container Query
         if(includeContainers && ((classification == null) && (location == null) && (schedule == null) && (state == null) && (type == null))) {
 
-            List<Container> resultC = containerRepository
-                    .findAllByCreatedAtAndUpdatedAt(createdAt, updatedAt);
+            List<Container> resultC = containerRepository.findAll();
 
             for (Container con : resultC){
-                results.add(new SearchResult(con));
+                Boolean createfilter = ((createdAt == null) || compareDates(createdAt, con.getCreatedAt()));
+                Boolean updatefilter = ((updatedAt == null) || compareDates(updatedAt, con.getUpdatedAt()));
+                if(createfilter && updatefilter) {
+                    results.add(new SearchResult(con));
+                }
             }
         }
 
+        System.out.println("Exiting 'getAllResults'");
         return results;
     }
 
     private List<SearchResult> fullSearch(String query, Boolean includeRecords, Boolean includeContainers,
                                                       Integer classification, Date createdAt, Date updatedAt, Date closedAt,
                                                       Integer location, Integer schedule, Integer state, Integer type){
-
+        System.out.println("In 'fullSearch'");
         List<SearchResult> results = new ArrayList<>();
 
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -290,6 +315,7 @@ public class SearchController {
             );
         }
 
+        System.out.println("Exiting 'fullSearch'");
         return results;
     }
 
@@ -302,6 +328,7 @@ public class SearchController {
                                              Integer schedule,
                                              Integer state,
                                              Integer type){
+        System.out.println("In 'filterRecords'");
         List<SearchResult> results = new ArrayList<>();
         for (Record r : records) {
             Boolean doAdd = true;
@@ -317,10 +344,12 @@ public class SearchController {
                 results.add(new SearchResult(r));
             }
         }
+        System.out.println("Exiting 'filterRecords'");
         return results;
     }
 
     private List<SearchResult> filterContainers(List<Container> containers, Date createdAt, Date updatedAt){
+        System.out.println("In 'filterContainers'");
         List<SearchResult> results = new ArrayList<>();
         for(Container c : containers){
             Boolean doAdd = (
@@ -331,26 +360,32 @@ public class SearchController {
                 results.add(new SearchResult(c));
             }
         }
+        System.out.println("Exiting 'filterContainers'");
         return results;
     }
 
     //Classification Filter Helper
     private Boolean checkClassifications(Record record, Integer classificationVal){
+        System.out.println("In 'checkClassifications'");
+        if (record.getClassifications().isEmpty()){
+            return false;
+        }
 
-                if (record.getClassifications().isEmpty()){
-                    return false;
-                }
-
-                Boolean check = true;
-                for (Classification c : record.getClassifications()){
-                    check = check && c.getId().equals(classificationVal);
-                }
-                return check;
+        Boolean check = true;
+        for (Classification c : record.getClassifications()){
+            check = check && c.getId().equals(classificationVal);
+        }
+        System.out.println("Exiting 'checkClassifications'");
+        return check;
     }
 
     //Date Comparison Helper
     private Boolean compareDates(Date date1, Date date2){
+        //System.out.println("In 'compareDates'");
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        //System.out.println("Date 1: " + date1 + "Date 2: " + date2);
+        //System.out.println("Date 1: " + fmt.format(date1) + "Date 2: " + fmt.format(date2));
+        //System.out.println("Exiting 'compareDates'");
         return fmt.format(date1).equals(fmt.format(date2));
     }
 
@@ -364,6 +399,7 @@ public class SearchController {
      */
     @RequestMapping("/reload-index")
     public void reload(){
+        System.out.println("In 'reload'");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         FullTextEntityManager fullTextEntityManager =
                 Search.getFullTextEntityManager(entityManager);
@@ -377,8 +413,10 @@ public class SearchController {
                     .cacheMode(CacheMode.NORMAL)
                     .startAndWait();
         } catch (InterruptedException e) {
+            System.out.println("Exiting 'reload'");
             // Exception handling
             e.printStackTrace();
         }
+        System.out.println("Exiting 'reload'");
     }
 }
