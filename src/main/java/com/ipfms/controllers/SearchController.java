@@ -394,7 +394,7 @@ public class SearchController {
      * Warning: The search index will be unavailable for the duration of the process
      * Should take approximately 1.5 hours with the given Data (RecordR-Data.sql)
      *
-     * Note: Before adding Notes to the index, was <5 minutes. Needing to join tables slows
+     * Note: Before adding Notes to the index, was under 5 minutes. Needing to join tables slows
      * it down significantly
      */
     @RequestMapping("/reload-index")

@@ -1,6 +1,7 @@
 com.ipfms
 com.ipfms.assembler
 com.ipfms.controllers
+com.ipfms.domain
 com.ipfms.domain.model
 com.ipfms.domain.repository
 com.ipfms.exception
