@@ -6,6 +6,7 @@ import com.ipfms.domain.model.User;
 import com.ipfms.domain.repository.LocationRepository;
 import com.ipfms.domain.repository.UserRepository;
 import com.ipfms.exception.EntityNotFoundException;
+import com.ipfms.exception.UnauthorizedCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -129,11 +131,29 @@ public class LocationController{
      * @return a void ResponseEntity with a NO_CONTENT status
      */
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Void> saveLocation(@RequestBody Location location) {
+    ResponseEntity<Void> saveLocation(HttpServletRequest request, @RequestBody Location location) {
+
+        String userId = (String)request.getAttribute("currentUserId");
+        User cur = userRepository.findByUserId(userId);
+        if (cur == null) {
+            throw new EntityNotFoundException("User not found - id: " + userId);
+        }
+        if (!cur.isAdmin()){
+            throw new UnauthorizedCallException("User lacks the necessary role for this call: Admin");
+        }
+
         Location l = null;
         if(location.getId() != null){
             l = locationRepository.findById(location.getId());
         }
+
+        if(l!= null){
+            if(l.isLocked() && !l.getUsers().contains(cur)){
+                throw new UnauthorizedCallException("This user is not permitted to edit this location");
+            }
+        }
+
+
         Set<User> requestUsers = location.getUsers();
         if (l != null) {
             Set<User> oldUsers = l.getUsers();
@@ -206,7 +226,16 @@ public class LocationController{
      * @return a void ResponseEntity with a NO_CONTENT status
      */
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteLocation(@PathVariable("id") Integer id){
+    ResponseEntity<Void> deleteLocation(HttpServletRequest request, @PathVariable("id") Integer id){
+        String userId = (String)request.getAttribute("currentUserId");
+        User cur = userRepository.findByUserId(userId);
+        if (cur == null) {
+            throw new EntityNotFoundException("User not found - id: " + userId);
+        }
+        if (!cur.isAdmin()){
+            throw new UnauthorizedCallException("User lacks the necessary role for this call: Admin");
+        }
+
         locationRepository.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

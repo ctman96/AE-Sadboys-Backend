@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ControllerExceptionHandler {
     private static final Logger LOG = Logger.getLogger(ControllerExceptionHandler.class.getName());
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = { EntityNotFoundException.class })
+    @ExceptionHandler(value = { EntityNotFoundException.class, UnauthorizedCallException.class })
     public void entityNotFoundException(Exception e) {
         LOG.log(Level.SEVERE, e.getMessage(), e);
     }
