@@ -183,6 +183,16 @@ public class RoleController{
      */
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteRole(@PathVariable("id") Integer id){
+        Role role = roleRepository.findById(id);
+        if(role == null){
+            throw new EntityNotFoundException("Role with given id could not be found");
+        }
+        Set<User> users = role.getUsers();
+        if(users != null){
+            for(User u : users){
+                u.setRoles(new HashSet<>());
+            }
+        }
         roleRepository.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
