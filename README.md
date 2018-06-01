@@ -1,5 +1,7 @@
 # Integrated Paper File Management System
 
+[Documentation](https://docs.google.com/document/d/1Z7Cqh9w_Z1mIrdK_GDnlKrDEtlHih-Q98lKckrJNLHY/edit?usp=sharing)
+
 Ensure you have:
 + jdk 1.8
 + maven 3.5.0
